@@ -43,7 +43,7 @@ const App = () => {
   };
 
   return (
-    <div className={`${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
       <Header theme={theme} toggleTheme={toggleTheme} />
       <RouterProvider router={router} fallbackElement={<BigSpinner />} />
     </div>
