@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 <ul className="flex space-x-6 items-center">
                     <li>
                         <div onClick={() => navigate('/profile')} className="cursor-pointer flex items-center space-x-2">
-                            <IconShoppingCart stroke={1.2} className='mr-2 ml-20' color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                            <IconShoppingCart stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
                         </div>
                     </li>
                     <li style={{ marginLeft: '10px' }}>
