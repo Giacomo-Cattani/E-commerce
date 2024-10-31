@@ -4,47 +4,56 @@ import { Home } from './pages';
 import { Header, BigSpinner } from './components';
 import { useState } from 'react';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />
-  },
-  // {
-  //   path: '/products',
-  //   element: <Products />
-  // },
-  // {
-  //   path: '/product/:id',
-  //   element: <ProductDetails />
-  // },
-  // {
-  //   path: '/cart',
-  //   element: <Cart />
-  // },
-  // {
-  //   path: '/checkout',
-  //   element: <Checkout />
-  // },
-  // {
-  //   path: '/about',
-  //   element: <About />
-  // },
-  // {
-  //   path: '/contact',
-  //   element: <Contact />
-  // }
-]);
 
 const App = () => {
+
+
+
   const [theme, setTheme] = useState('dark');
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Header theme={theme} toggleTheme={toggleTheme} />,
+      children: [
+        {
+          path: '/',
+          element: <Home />
+        }
+      ]
+    },
+    // {
+    //   path: '/products',
+    //   element: <Products />
+    // },
+    // {
+    //   path: '/product/:id',
+    //   element: <ProductDetails />
+    // },
+    // {
+    //   path: '/cart',
+    //   element: <Cart />
+    // },
+    // {
+    //   path: '/checkout',
+    //   element: <Checkout />
+    // },
+    // {
+    //   path: '/about',
+    //   element: <About />
+    // },
+    // {
+    //   path: '/contact',
+    //   element: <Contact />
+    // }
+  ]);
+
   return (
     <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
-      <Header theme={theme} toggleTheme={toggleTheme} />
       <RouterProvider router={router} fallbackElement={<BigSpinner />} />
     </div>
   );
