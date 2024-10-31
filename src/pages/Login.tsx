@@ -1,7 +1,11 @@
-export const Login = () => {
+interface LoginProps {
+    theme: string;
+}
+
+export const Login: React.FC<LoginProps> = ({ theme }) => {
     return (
-        <div>
-            <h1>Login</h1>
-        </div>
+        <div className={`min-h-screen flex flex-col justify-center items-center ${theme === 'dark' ? ' text-white' : 'text-neutral-900'}`}>
+            <p> Login</p>
+        </div >
     );
 };
