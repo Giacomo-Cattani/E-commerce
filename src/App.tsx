@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home } from './pages';
+import { Home, Login } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
 import { Header, BigSpinner } from './components';
 import { useState } from 'react';
@@ -7,32 +7,42 @@ import { useState } from 'react';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />
+    element: <Home />,
+    children: [
+      {
+        path: '/login',
+        element: <Login />
+      },
+      {
+        path: '/logout',
+        element: <Home />
+      },
+      // {
+      //   path: '/products',
+      //   element: <Products />
+      // },
+      // {
+      //   path: '/product/:id',
+      //   element: <ProductDetails />
+      // },
+      // {
+      //   path: '/cart',
+      //   element: <Cart />
+      // },
+      // {
+      //   path: '/checkout',
+      //   element: <Checkout />
+      // },
+      // {
+      //   path: '/about',
+      //   element: <About />
+      // },
+      // {
+      //   path: '/contact',
+      //   element: <Contact />
+      // }
+    ]
   },
-  // {
-  //   path: '/products',
-  //   element: <Products />
-  // },
-  // {
-  //   path: '/product/:id',
-  //   element: <ProductDetails />
-  // },
-  // {
-  //   path: '/cart',
-  //   element: <Cart />
-  // },
-  // {
-  //   path: '/checkout',
-  //   element: <Checkout />
-  // },
-  // {
-  //   path: '/about',
-  //   element: <About />
-  // },
-  // {
-  //   path: '/contact',
-  //   element: <Contact />
-  // }
 ]);
 
 const App = () => {

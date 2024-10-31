@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 </ul>
                 <ul className="flex space-x-6 items-center">
                     <li>
-                        <div onClick={() => redirect('/profile')} className="cursor-pointer flex items-center space-x-2">
+                        <div onClick={() => redirect('/cart')} className="cursor-pointer flex items-center space-x-2">
                             <IconShoppingCart stroke={1.2} className='mr-2 ml-20' color={`${theme === 'dark' ? 'white' : 'black'}`} />
                         </div>
                     </li>
@@ -38,8 +38,8 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                         <div
                             onMouseEnter={() => setHovered(true)}
                             onMouseLeave={() => setHovered(false)}
-                            onClick={() => redirect('/profile')} className="cursor-pointer flex items-center space-x-2">
-                            {false ? (
+                            onClick={() => true ? redirect('/login') : redirect('/logout')} className="cursor-pointer flex items-center space-x-2">
+                            {true ? (
                                 <IconLogin
                                     stroke={1.2}
                                     color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}
