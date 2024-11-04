@@ -1,13 +1,11 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home } from './pages';
+import { Home, Login, NotFound } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
 import { Header, BigSpinner } from './components';
 import { useState } from 'react';
 
 
 const App = () => {
-
-
 
   const [theme, setTheme] = useState('dark');
 
@@ -23,32 +21,44 @@ const App = () => {
         {
           path: '/',
           element: <Home theme={theme} />
-        }
+        },
+        {
+          path: '/login',
+          element: <Login theme={theme} />
+        },
+        {
+          path: '/logout',
+          element: <Home theme={theme} />
+        },
+        {
+          path: '*',
+          element: <NotFound theme={theme} />
+        },
       ]
     },
     // {
     //   path: '/products',
-    //   element: <Products />
+    //   element: <Products theme={theme} />
     // },
     // {
     //   path: '/product/:id',
-    //   element: <ProductDetails />
+    //   element: <ProductDetails theme={theme} />
     // },
     // {
     //   path: '/cart',
-    //   element: <Cart />
+    //   element: <Cart theme={theme} />
     // },
     // {
     //   path: '/checkout',
-    //   element: <Checkout />
+    //   element: <Checkout theme={theme} />
     // },
     // {
     //   path: '/about',
-    //   element: <About />
+    //   element: <About theme={theme} />
     // },
     // {
     //   path: '/contact',
-    //   element: <Contact />
+    //   element: <Contact theme={theme} />
     // }
   ]);
 
