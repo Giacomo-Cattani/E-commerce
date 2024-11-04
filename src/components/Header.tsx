@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout } from '@tabler/icons-react';
+import { useAuth } from '../context';
 
 interface HeaderProps {
     theme: string;
@@ -11,6 +12,11 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(false);
+    const { isLoggedIn, logout } = useAuth();
+
+    useEffect(() => {
+        console.log(isLoggedIn);
+    }, [isLoggedIn]);
 
     return (
         <div>
@@ -39,8 +45,15 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                             <div
                                 onMouseEnter={() => setHovered(true)}
                                 onMouseLeave={() => setHovered(false)}
-                                onClick={() => true ? navigate('/login') : navigate('/logout')} className="cursor-pointer flex items-center space-x-2">
-                                {true ? (
+                                onClick={() => {
+                                    if (!isLoggedIn) {
+                                        navigate('/login');
+                                    } else {
+                                        logout();
+                                        navigate('/login');
+                                    }
+                                }} className="cursor-pointer flex items-center space-x-2">
+                                {!isLoggedIn ? (
                                     <IconLogin
                                         stroke={1.2}
                                         color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}

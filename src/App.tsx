@@ -3,6 +3,8 @@ import { Home, Login, NotFound } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
 import { Header, BigSpinner } from './components';
 import { useState } from 'react';
+import { SignUp } from './pages/SignUp';
+import { AuthProvider } from './context';
 
 
 const App = () => {
@@ -27,8 +29,8 @@ const App = () => {
           element: <Login theme={theme} />
         },
         {
-          path: '/logout',
-          element: <Home theme={theme} />
+          path: '/signup',
+          element: <SignUp theme={theme} />
         },
         {
           path: '*',
@@ -63,9 +65,11 @@ const App = () => {
   ]);
 
   return (
-    <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
-      <RouterProvider router={router} fallbackElement={<BigSpinner />} />
-    </div>
+    <AuthProvider>
+      <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
+        <RouterProvider router={router} fallbackElement={<BigSpinner />} />
+      </div>
+    </AuthProvider>
   );
 };
 
