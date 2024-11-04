@@ -10,6 +10,7 @@ const featuredProducts = [
     {
         id: 1,
         name: 'Wireless Noise-Cancelling Headphones',
+        category: 'Electronics',
         price: 249.99,
         image: 'https://placehold.co/400x300',
         rating: 4.5,
@@ -18,6 +19,7 @@ const featuredProducts = [
     {
         id: 2,
         name: 'Minimalist Leather Backpack',
+        category: 'Fashion',
         price: 129.99,
         image: 'https://placehold.co/400x300',
         rating: 4.7,
@@ -26,6 +28,7 @@ const featuredProducts = [
     {
         id: 3,
         name: 'Smart Fitness Watch',
+        category: 'Sports',
         price: 199.99,
         image: 'https://placehold.co/400x300',
         rating: 4.6,
@@ -54,7 +57,7 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
     return (
         <div className={`${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen`}>
             {/* Hero Section */}
-            <section className={`relative bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} py-20 px-6`}>
+            <section className={`relative bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} pt-32 pb-20 px-6`}>
                 <div className="container mx-auto grid md:grid-cols-2 items-center gap-12">
                     <div>
                         <h1 className="text-5xl font-bold mb-6">
@@ -91,17 +94,17 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                 <div className="container mx-auto grid md:grid-cols-3 gap-8 text-center">
                     <div className={`bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}>
                         <Truck className="mx-auto mb-4 text-yellow-500" size={48} />
-                        <h3 className="text-xl font-semibold mb-2">Free Shipping</h3>
+                        <h3 className="text-xl font-semibold mb-2 text-neutral-800">Free Shipping</h3>
                         <p className="text-neutral-400">Free shipping on orders over $100</p>
                     </div>
                     <div className={`bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}>
                         <Shield className="mx-auto mb-4 text-yellow-500" size={48} />
-                        <h3 className="text-xl font-semibold mb-2">Secure Payment</h3>
+                        <h3 className={`text-xl font-semibold mb-2 text-neutral-800`}>Secure Payment</h3>
                         <p className="text-neutral-400">100% secure payment methods</p>
                     </div>
                     <div className={`bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}>
                         <Heart className="mx-auto mb-4 text-yellow-500" size={48} />
-                        <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
+                        <h3 className="text-xl font-semibold mb-2 text-neutral-800">24/7 Support</h3>
                         <p className="text-neutral-400">Dedicated customer support</p>
                     </div>
                 </div>
@@ -183,7 +186,7 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                             placeholder="Enter your email address"
                             className="flex-grow px-6 py-3 rounded-l-full text-neutral-900 focus:outline-none"
                         />
-                        <button
+                        <button onClick={() => { alert("GAYY") }}
                             className="px-8 py-3 bg-neutral-900 text-white rounded-r-full hover:bg-neutral-800 transition"
                         >
                             Subscribe
