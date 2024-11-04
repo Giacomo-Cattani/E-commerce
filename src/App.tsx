@@ -22,7 +22,7 @@ const App = () => {
       children: [
         {
           path: '/',
-          element: <Home />
+          element: <Home theme={theme} />
         }
       ]
     },
