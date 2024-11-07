@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout } from '@tabler/icons-react';
 import { useAuth } from '../context';
+import { CartPopUp } from './CartPopUp';
 
 interface HeaderProps {
     theme: string;
@@ -13,6 +14,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(false);
     const { isLoggedIn, logout } = useAuth();
+    const [showCart, setShowCart] = useState(false);
 
     return (
         <div>
@@ -28,17 +30,17 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                     </ul>
                     <ul className="flex space-x-6 items-center">
                         <li>
-                            <div onClick={() => navigate('/cart')} className="cursor-pointer flex items-center space-x-2 relative group">
-                                <IconShoppingCart stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
-                                <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div onClick={() => setShowCart(true)} className="mr-2 cursor-pointer flex flex-col items-center relative group">
+                                <IconShoppingCart stroke={1.2} color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                <div className="absolute bottom-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     Cart
                                 </div>
                             </div>
                         </li>
                         <li style={{ marginLeft: '10px' }}>
-                            <div onClick={() => navigate('/profile')} className="cursor-pointer flex items-center space-x-2 relative group">
-                                <IconUserCircle stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
-                                <div className="absolute bottom-0 right-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div onClick={() => navigate('/profile')} className="mr-2 cursor-pointer flex flex-col items-center relative group">
+                                <IconUserCircle stroke={1.2} color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                <div className="absolute bottom-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                     Profile
                                 </div>
                             </div>
@@ -55,15 +57,15 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                                         console.log('Logged out');
                                         navigate('/login');
                                     }
-                                }} className="cursor-pointer flex items-center space-x-2 relative group">
+                                }} className="mr-2 cursor-pointer flex flex-col items-center relative group">
                                 {!isLoggedIn ? (
                                     <>
                                         <IconLogin
                                             stroke={1.2}
                                             color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}
                                         />
-                                        <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            Cart
+                                        <div className="absolute bottom-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Login
                                         </div>
                                     </>
                                 ) : (
@@ -73,8 +75,8 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                                             color={`${hovered ? 'red' : theme === 'dark' ? 'white' : 'black'}`}
                                             className="hover:text-red-500"
                                         />
-                                        <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            Cart
+                                        <div className="absolute bottom-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Logout
                                         </div>
                                     </>
                                 )}
@@ -88,6 +90,8 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                     </ul>
                 </nav>
             </header>
+
+            {showCart && <CartPopUp items={[]} onClose={() => setShowCart(false)} />}
             <Outlet />
         </div>
     );
