@@ -1,4 +1,4 @@
-import { Client, Account, ID } from 'appwrite';
+import { Client, Account, Databases, ID } from 'appwrite';
 
 const client = new Client();
 client
@@ -6,6 +6,7 @@ client
     .setProject('67210af2003b1c3823c6'); // Your project ID
 
 export const account = new Account(client);
+export const database = new Databases(client);
 
 export const createAccount = async (email: string, password: string, name: string) => {
     try {
