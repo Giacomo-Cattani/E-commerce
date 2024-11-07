@@ -1,9 +1,10 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Home, Login, NotFound } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
-import { Header, BigSpinner } from './components';
+import { Header, BigSpinner, PrivateRoute } from './components';
 import { useState } from 'react';
-
+import { SignUp } from './pages/SignUp';
+import { AuthProvider } from './context';
 
 const App = () => {
 
@@ -24,11 +25,39 @@ const App = () => {
         },
         {
           path: '/login',
-          element: <Login theme={theme} />
+          element: <PrivateRoute><Login theme={theme} /></PrivateRoute>
         },
         {
-          path: '/logout',
-          element: <Home theme={theme} />
+          path: '/signup',
+          element: <PrivateRoute><SignUp theme={theme} /></PrivateRoute>
+        },
+        {
+          path: '/about',
+          element: <div>Ciao</div>
+        },
+        {
+          path: '/products',
+          element: <div>Ciao</div>
+        },
+        {
+          path: '/product/:id',
+          element: <div>Ciao</div>
+        },
+        {
+          path: '/cart',
+          element: <div>Ciao</div>
+        },
+        {
+          path: '/contact',
+          element: <div>Ciao</div>
+        },
+        {
+          path: '/profile',
+          element: <PrivateRoute><div>Ciao</div></PrivateRoute>
+        },
+        {
+          path: '/checkout',
+          element: <div>Ciao</div>
         },
         {
           path: '*',
@@ -36,36 +65,14 @@ const App = () => {
         },
       ]
     },
-    // {
-    //   path: '/products',
-    //   element: <Products theme={theme} />
-    // },
-    // {
-    //   path: '/product/:id',
-    //   element: <ProductDetails theme={theme} />
-    // },
-    // {
-    //   path: '/cart',
-    //   element: <Cart theme={theme} />
-    // },
-    // {
-    //   path: '/checkout',
-    //   element: <Checkout theme={theme} />
-    // },
-    // {
-    //   path: '/about',
-    //   element: <About theme={theme} />
-    // },
-    // {
-    //   path: '/contact',
-    //   element: <Contact theme={theme} />
-    // }
   ]);
 
   return (
-    <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
-      <RouterProvider router={router} fallbackElement={<BigSpinner />} />
-    </div>
+    <AuthProvider>
+      <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
+        <RouterProvider router={router} fallbackElement={<BigSpinner />} />
+      </div>
+    </AuthProvider>
   );
 };
 

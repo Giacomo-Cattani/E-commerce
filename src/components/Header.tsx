@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout } from '@tabler/icons-react';
+import { useAuth } from '../context';
 
 interface HeaderProps {
     theme: string;
@@ -11,6 +12,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(false);
+    const { isLoggedIn, logout } = useAuth();
 
     return (
         <div>
@@ -26,31 +28,55 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                     </ul>
                     <ul className="flex space-x-6 items-center">
                         <li>
-                            <div onClick={() => navigate('/cart')} className="cursor-pointer flex items-center space-x-2">
+                            <div onClick={() => navigate('/cart')} className="cursor-pointer flex items-center space-x-2 relative group">
                                 <IconShoppingCart stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Cart
+                                </div>
                             </div>
                         </li>
                         <li style={{ marginLeft: '10px' }}>
-                            <div onClick={() => navigate('/profile')} className="cursor-pointer flex items-center space-x-2">
+                            <div onClick={() => navigate('/profile')} className="cursor-pointer flex items-center space-x-2 relative group">
                                 <IconUserCircle stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                <div className="absolute bottom-0 right-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Profile
+                                </div>
                             </div>
                         </li>
                         <li style={{ marginLeft: '10px' }}>
                             <div
                                 onMouseEnter={() => setHovered(true)}
                                 onMouseLeave={() => setHovered(false)}
-                                onClick={() => true ? navigate('/login') : navigate('/logout')} className="cursor-pointer flex items-center space-x-2">
-                                {true ? (
-                                    <IconLogin
-                                        stroke={1.2}
-                                        color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}
-                                    />
+                                onClick={() => {
+                                    if (!isLoggedIn) {
+                                        navigate('/login');
+                                    } else {
+                                        logout();
+                                        console.log('Logged out');
+                                        navigate('/login');
+                                    }
+                                }} className="cursor-pointer flex items-center space-x-2 relative group">
+                                {!isLoggedIn ? (
+                                    <>
+                                        <IconLogin
+                                            stroke={1.2}
+                                            color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}
+                                        />
+                                        <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Cart
+                                        </div>
+                                    </>
                                 ) : (
-                                    <IconLogout
-                                        stroke={1.2}
-                                        color={`${hovered ? 'red' : theme === 'dark' ? 'white' : 'black'}`}
-                                        className="hover:text-red-500"
-                                    />
+                                    <>
+                                        <IconLogout
+                                            stroke={1.2}
+                                            color={`${hovered ? 'red' : theme === 'dark' ? 'white' : 'black'}`}
+                                            className="hover:text-red-500"
+                                        />
+                                        <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Cart
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         </li>

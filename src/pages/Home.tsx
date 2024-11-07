@@ -60,7 +60,7 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
             <section className={`relative bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} pt-32 pb-20 px-6`}>
                 <div className="container mx-auto grid md:grid-cols-2 items-center gap-12">
                     <div>
-                        <h1 className="text-5xl font-bold mb-6">
+                        <h1 className="text-5xl font-bold mb-6 ">
                             Discover Amazing Products
                         </h1>
                         <p className="text-xl mb-8">
@@ -121,7 +121,7 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                                 className={`bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg hover:scale-105 transition cursor-pointer ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}
                             >
                                 <div className="text-5xl mb-4">{category.icon}</div>
-                                <p className="font-semibold">{category.name}</p>
+                                <p className="font-semibold text-neutral-800">{category.name}</p>
                             </div>
                         ))}
                     </div>
@@ -152,13 +152,13 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                                     </button>
                                 </div>
                                 <div className="p-6 flex flex-col flex-grow">
-                                    <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                                    <h3 className="text-xl font-semibold mb-2 text-neutral-800">{product.name}</h3>
                                     <div className="flex items-center mt-auto mb-2">
                                         <Star className="text-yellow-500 mr-2" size={20} />
-                                        <span>{product.rating} ({product.reviews} reviews)</span>
+                                        <span className='text-neutral-800' >{product.rating} ({product.reviews} reviews)</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-2xl font-bold">${product.price}</span>
+                                        <span className="text-2xl font-bold text-neutral-800">${product.price}</span>
                                         <button
                                             onClick={addToCart}
                                             className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
