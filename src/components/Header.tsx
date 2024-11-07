@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout } from '@tabler/icons-react';
@@ -14,10 +14,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     const [hovered, setHovered] = useState(false);
     const { isLoggedIn, logout } = useAuth();
 
-    useEffect(() => {
-        console.log(isLoggedIn);
-    }, [isLoggedIn]);
-
     return (
         <div>
             <header className={`${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} py-4 px-6 shadow-md fixed top-0 left-0 w-full z-50`}>
@@ -32,13 +28,19 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                     </ul>
                     <ul className="flex space-x-6 items-center">
                         <li>
-                            <div onClick={() => navigate('/cart')} className="cursor-pointer flex items-center space-x-2">
+                            <div onClick={() => navigate('/cart')} className="cursor-pointer flex items-center space-x-2 relative group">
                                 <IconShoppingCart stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Cart
+                                </div>
                             </div>
                         </li>
                         <li style={{ marginLeft: '10px' }}>
-                            <div onClick={() => navigate('/profile')} className="cursor-pointer flex items-center space-x-2">
+                            <div onClick={() => navigate('/profile')} className="cursor-pointer flex items-center space-x-2 relative group">
                                 <IconUserCircle stroke={1.2} className='mr-2' color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                <div className="absolute bottom-0 right-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Profile
+                                </div>
                             </div>
                         </li>
                         <li style={{ marginLeft: '10px' }}>
@@ -50,20 +52,31 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                                         navigate('/login');
                                     } else {
                                         logout();
+                                        console.log('Logged out');
                                         navigate('/login');
                                     }
-                                }} className="cursor-pointer flex items-center space-x-2">
+                                }} className="cursor-pointer flex items-center space-x-2 relative group">
                                 {!isLoggedIn ? (
-                                    <IconLogin
-                                        stroke={1.2}
-                                        color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}
-                                    />
+                                    <>
+                                        <IconLogin
+                                            stroke={1.2}
+                                            color={`${hovered ? 'lime' : theme === 'dark' ? 'white' : 'black'}`}
+                                        />
+                                        <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Cart
+                                        </div>
+                                    </>
                                 ) : (
-                                    <IconLogout
-                                        stroke={1.2}
-                                        color={`${hovered ? 'red' : theme === 'dark' ? 'white' : 'black'}`}
-                                        className="hover:text-red-500"
-                                    />
+                                    <>
+                                        <IconLogout
+                                            stroke={1.2}
+                                            color={`${hovered ? 'red' : theme === 'dark' ? 'white' : 'black'}`}
+                                            className="hover:text-red-500"
+                                        />
+                                        <div className="absolute bottom-0 right-0.5 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Cart
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         </li>

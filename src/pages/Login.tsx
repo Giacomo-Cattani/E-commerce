@@ -18,6 +18,7 @@ export const Login: React.FC<LoginProps> = ({ theme }) => {
     const navigate = useNavigate();
     const { login } = useAuth();
 
+
     function handleLogin(e: React.FormEvent) {
         e.preventDefault();
         const email = (document.getElementById('email') as HTMLInputElement).value;
@@ -33,8 +34,6 @@ export const Login: React.FC<LoginProps> = ({ theme }) => {
         }).catch((error) => {
             console.error('Error logging in:', error);
         });
-
-        console.log('Login:', email, password);
     }
 
     return (

@@ -14,6 +14,8 @@ export const SignUp: React.FC<SignUpProps> = ({ theme }) => {
     const [visibility, setVisibility] = useState(false);
     const navigate = useNavigate();
 
+
+
     function SignUpHandling(e: React.FormEvent) {
         e.preventDefault();
         const name = (document.getElementById('name') as HTMLInputElement).value;
@@ -23,7 +25,6 @@ export const SignUp: React.FC<SignUpProps> = ({ theme }) => {
             toast.error('Password must be between 8 and 265 characters.');
             return;
         }
-        console.log('Sign Up:', name, email, password);
         createAccount(email, password, name)
             .then((res) => {
                 if ((res as { status: boolean }).status === true) {

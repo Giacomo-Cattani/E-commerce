@@ -10,7 +10,7 @@ export const account = new Account(client);
 export const createAccount = async (email: string, password: string, name: string) => {
     try {
         const response = await account.create(ID.unique(), email, password, name);
-        if (response) { console.log('Account created successfully:', response); return response; }
+        if (response) { return response; }
     } catch (error) {
         return error;
         console.error('Error creating account:', error);
