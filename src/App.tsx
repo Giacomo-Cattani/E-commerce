@@ -1,7 +1,8 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home, Login, NotFound } from './pages';
+import { Home, Login, NotFound, Test } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
-import { Header, BigSpinner, PrivateRoute } from './components';
+import { Header, BigSpinner, PrivateRoute, HeaderAdmin } from './components';
+import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products, Reports } from './pages/admin'
 import { useState } from 'react';
 import { SignUp } from './pages/SignUp';
 import { AuthProvider } from './context';
@@ -37,7 +38,7 @@ const App = () => {
         },
         {
           path: '/products',
-          element: <div>Ciao</div>
+          element: <Test />
         },
         {
           path: '/product/:id',
@@ -63,9 +64,44 @@ const App = () => {
           path: '*',
           element: <NotFound theme={theme} />
         },
-      ]
+      ],
     },
-  ]);
+    {
+      path: '/admin',
+      element: <PrivateRoute><HeaderAdmin theme={theme} toggleTheme={toggleTheme} /></PrivateRoute>,
+      children: [
+        {
+          path: '/admin',
+          element: <Dashboard />
+        },
+        {
+          path: 'products',
+          element: <Products />
+        },
+        {
+          path: 'products/:id',
+          element: <ProductDetails />
+        },
+        {
+          path: 'orders',
+          element: <Orders />
+        },
+        {
+          path: 'customers',
+          element: <Customers />
+        },
+        {
+          path: 'inventory',
+          element: <Inventory />
+        },
+        {
+          path: 'reports',
+          element: <Reports />
+        }
+      ]
+    }
+  ]
+  );
 
   return (
     <AuthProvider>
