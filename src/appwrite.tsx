@@ -1,4 +1,4 @@
-import { Client, Account, Databases, ID } from 'appwrite';
+import { Client, Account, Databases, ID, Teams } from 'appwrite';
 
 const client = new Client();
 client
@@ -7,6 +7,7 @@ client
 
 export const account = new Account(client);
 export const database = new Databases(client);
+export const teams = new Teams(client);
 
 export const createAccount = async (email: string, password: string, name: string) => {
     try {
@@ -21,7 +22,8 @@ export const createAccount = async (email: string, password: string, name: strin
 export const loginAccount = async (email: string, password: string) => {
     try {
         const response = await account.createEmailPasswordSession(email, password);
-        return response;
+        const resTeams = await teams.list()
+        return [response, resTeams];
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error logging in:', error.message);

@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home, Login, NotFound, Test } from './pages';
+import { Home, Login, NotFound } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
 import { Header, BigSpinner, PrivateRoute, HeaderAdmin } from './components';
 import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products, Reports } from './pages/admin'
@@ -38,7 +38,7 @@ const App = () => {
         },
         {
           path: '/products',
-          element: <Test />
+          element: <div>Ciao</div>
         },
         {
           path: '/product/:id',
@@ -72,31 +72,31 @@ const App = () => {
       children: [
         {
           path: '/admin',
-          element: <Dashboard />
+          element: <Dashboard theme={theme} />
         },
         {
           path: 'products',
-          element: <Products />
+          element: <Products theme={theme} />
         },
         {
           path: 'products/:id',
-          element: <ProductDetails />
+          element: <ProductDetails theme={theme} />
         },
         {
           path: 'orders',
-          element: <Orders />
+          element: <Orders theme={theme} />
         },
         {
           path: 'customers',
-          element: <Customers />
+          element: <Customers theme={theme} />
         },
         {
           path: 'inventory',
-          element: <Inventory />
+          element: <Inventory theme={theme} />
         },
         {
           path: 'reports',
-          element: <Reports />
+          element: <Reports theme={theme} />
         }
       ]
     }

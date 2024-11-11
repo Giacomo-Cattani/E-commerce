@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useAuth } from '../context';
+import { Models } from 'appwrite';
 
 interface LoginProps {
     theme: string;
@@ -24,11 +25,12 @@ export const Login: React.FC<LoginProps> = ({ theme }) => {
         const email = (document.getElementById('email') as HTMLInputElement).value;
         const password = (document.getElementById('password') as HTMLInputElement).value;
 
-        loginAccount(email, password).then((res) => {
-            if (typeof res !== 'object') {
-                toast.error(res);
+        loginAccount(email, password).then((res: string | (Models.Session | Models.TeamList<Models.Preferences>)[]) => {
+            if (typeof res[0] !== 'object') {
+                console.log(res);
+                toast.error(String(res));
             } else {
-                login();
+                login(res[1] as Models.TeamList<Models.Preferences>);
                 navigate('/');
             }
         }).catch((error) => {

@@ -1,6 +1,10 @@
 import React from 'react';
 
-export const Inventory: React.FC = () => {
+interface InventoryProps {
+    theme: string;
+}
+
+export const Inventory: React.FC<InventoryProps> = ({ theme }) => {
     return (
         <div className="pt-32">
             <h1 className="text-2xl font-bold">Inventory Management</h1>

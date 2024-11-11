@@ -1,7 +1,11 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-export const Dashboard: React.FC = () => {
+interface DashboardProps {
+    theme: string;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ theme }) => {
     return (
         <div className="pt-32">
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>

@@ -1,7 +1,11 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-export const ProductDetails: React.FC = () => {
+interface ProductDetailsProps {
+    theme: string;
+}
+
+export const ProductDetails: React.FC<ProductDetailsProps> = ({theme}) => {
     const { id } = useParams<Record<string, string | undefined>>();
 
     return (

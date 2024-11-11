@@ -1,6 +1,10 @@
 import React from 'react';
 
-export const Customers: React.FC = () => {
+interface CustomersProps {
+    theme: string;
+}
+
+export const Customers: React.FC<CustomersProps> = ({ theme }) => {
     return (
         <div className="pt-32">
             <h1 className="text-2xl font-bold">Customer Management</h1>
