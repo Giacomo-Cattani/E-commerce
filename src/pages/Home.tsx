@@ -144,12 +144,6 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                                         alt={product.name}
                                         className="w-full h-64 object-cover"
                                     />
-                                    <button
-                                        className="absolute top-4 right-4 bg-white p-2 rounded-full hover:bg-yellow-50 transition"
-                                        onClick={() => {/* Add to wishlist */ }}
-                                    >
-                                        <Heart className="text-neutral-500 hover:text-red-500" />
-                                    </button>
                                 </div>
                                 <div className="p-6 flex flex-col flex-grow">
                                     <h3 className="text-xl font-semibold mb-2 text-neutral-800">{product.name}</h3>
