@@ -20,7 +20,7 @@ export const HeaderAdmin: React.FC<HeaderAdminProps> = ({ theme, toggleTheme }) 
                     </div>
                     <ul className="flex space-x-4">
                         <li >
-                            <div onClick={() => navigate('/admin/dashboard')} className="flex items-center cursor-pointer hover:text-gray-400">
+                            <div onClick={() => navigate('/admin/')} className="flex items-center cursor-pointer hover:text-gray-400">
                                 <Grid className="inline-block mr-2" size={20} /> <span className="hidden sm:inline">Dashboard</span>
                             </div>
                         </li>

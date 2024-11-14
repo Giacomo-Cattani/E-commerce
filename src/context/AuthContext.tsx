@@ -8,6 +8,7 @@ interface AuthContextType {
     login: (list: Models.TeamList<Models.Preferences>) => Promise<void>;
     logout: () => void;
     admin: boolean;
+    categories: { name: string; icon: string }[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,6 +18,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const [admin, setAdmin] = useState<boolean>(false);
+    const categories = [
+        { name: 'Electronics', icon: '💻' },
+        { name: 'Fashion', icon: '👗' },
+        { name: 'Home & Kitchen', icon: '🏠' },
+        { name: 'Sports', icon: '⚽' },
+        { name: 'Beauty', icon: '💄' },
+        { name: 'Books', icon: '📚' }
+    ];
 
     useEffect(() => {
         const checkSession = async () => {
@@ -78,7 +87,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout, admin }}>
+        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout, admin, categories }}>
             {children}
         </AuthContext.Provider>
     );

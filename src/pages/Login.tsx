@@ -45,12 +45,12 @@ export const Login: React.FC<LoginProps> = ({ theme }) => {
                 <form className="space-y-6" onSubmit={handleLogin}>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-neutral-800">Email</label>
-                        <input required type="email" id="email" className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-neutral-800" />
+                        <input autoComplete='email' required type="email" id="email" className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-neutral-800" />
                     </div>
                     <div>
                         <label htmlFor="password" className="block text-sm font-medium text-neutral-800">Password</label>
                         <div className="relative">
-                            <input required type={visibility ? 'text' : 'password'} id="password" className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-neutral-800" />
+                            <input autoComplete='current-password' required type={visibility ? 'text' : 'password'} id="password" className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-neutral-800" />
                             <button type="button" onClick={() => setVisibility(!visibility)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-800">
                                 {visibility ? <EyeClosed size={20} /> : <Eye size={20} />}
                             </button>

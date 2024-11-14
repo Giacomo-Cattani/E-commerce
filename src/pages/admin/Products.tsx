@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Star } from 'lucide-react';
+import { Star, ArrowDownNarrowWide, ArrowUpNarrowWide } from 'lucide-react';
 import { database } from '../../appwrite';
 import { Query } from 'appwrite';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context';
 
 interface Product {
     name: string;
@@ -33,16 +34,30 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
         const savedPage = sessionStorage.getItem('page');
         return savedPage ? JSON.parse(savedPage) : 0;
     });
-    const [search, setSearch] = useState('');
-    const [type, setType] = useState('');
-    const [order, setOrder] = useState('');
+    const [search, setSearch] = useState(() => {
+        const savedSearch = sessionStorage.getItem('search');
+        return savedSearch ? JSON.parse(savedSearch) : '';
+    });
+    const [type, setType] = useState<string[]>(() => {
+        const savedType = sessionStorage.getItem('type');
+        return savedType ? JSON.parse(savedType) : [];
+    });
+    const [order, setOrder] = useState(() => {
+        const savedOrder = sessionStorage.getItem('order');
+        return savedOrder ? JSON.parse(savedOrder) : 'Name';
+    });
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showOrderDropdown, setShowOrderDropdown] = useState(false);
+    const [orderType, setOrderType] = useState<'asc' | 'desc'>('asc');
     const navigate = useNavigate();
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const orderDropdownRef = useRef<HTMLDivElement>(null);
+    const { categories } = useAuth();
 
     useEffect(() => {
         setHasMore(true);
         fetchProducts();
-    }, [page, search, type, order]);
-
+    }, [page, search, type, orderType, order]);
 
     useEffect(() => {
         sessionStorage.setItem('products', JSON.stringify(products));
@@ -52,21 +67,58 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
         sessionStorage.setItem('page', JSON.stringify(page));
     }, [page]);
 
+    useEffect(() => {
+        sessionStorage.setItem('search', JSON.stringify(search));
+    }, [search]);
+
+    useEffect(() => {
+        sessionStorage.setItem('type', JSON.stringify(type));
+    }, [type]);
+
+    useEffect(() => {
+        sessionStorage.setItem('order', JSON.stringify(order));
+    }, [order]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+            if (orderDropdownRef.current && !orderDropdownRef.current.contains(event.target as Node)) {
+                setShowOrderDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     const fetchProducts = async () => {
+        console.log(search)
         const products = await database.listDocuments(
-            '672ca0ab0036c24b4884',
-            '6732370600354fdb69a3',
+            import.meta.env.VITE_DB_ID,
+            import.meta.env.VITE_COL_PRODUCT,
             [
-                Query.contains('category', type),
-                Query.contains('name', search),
-                Query.contains('description', search),
+                ...(type.length > 1 ? [Query.or(type.map(t => Query.contains('category', t)))] : type.map(t => Query.contains('category', t))),
+                Query.or(
+                    [Query.contains('name', search),
+                    Query.contains('description', search)
+                    ]),
                 Query.limit(25),
                 Query.offset(page * 25),
+                orderType === 'asc' ? Query.orderAsc(order.toLowerCase()) : Query.orderDesc(order.toLowerCase())
             ]
         );
+        console.log(order)
+        console.log(products.documents)
         if (products.documents.length === 0) {
             setHasMore(false);
         } else {
+            if (products.documents.length < 25) {
+                setHasMore(false);
+            }
             setProducts(prevProducts => {
                 const newProducts = (products.documents as Product[]).filter((newProduct: Product) =>
                     !prevProducts.some(prevProduct => prevProduct.$id === newProduct.$id)
@@ -84,16 +136,22 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
         sessionStorage.removeItem('page'); // Reset session storage when search changes
     };
 
-    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setType(e.target.value);
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setType(prevType =>
+            prevType.includes(value)
+                ? prevType.filter(t => t !== value)
+                : [...prevType, value]
+        );
         setPage(0);
         setProducts([]);
         sessionStorage.removeItem('products'); // Reset session storage when type changes
         sessionStorage.removeItem('page'); // Reset session storage when type changes
     };
 
-    const handleOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setOrder(e.target.value);
+    const handleOrderClick = (orderBy: string) => {
+        setOrder(orderBy.charAt(0).toUpperCase() + orderBy.slice(1));
+        setOrderType(prevOrderType => prevOrderType === 'asc' ? 'desc' : 'asc');
         setPage(0);
         setProducts([]);
         sessionStorage.removeItem('products'); // Reset session storage when order changes
@@ -106,6 +164,20 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
 
     const handleDeleteProduct = (id: string) => {
         // Delete product logic here
+    };
+
+    const handleResetFilters = () => {
+        setSearch('');
+        setType([]);
+        setOrder('Name');
+        setOrderType('asc');
+        setPage(0);
+        setProducts([]);
+        sessionStorage.removeItem('products');
+        sessionStorage.removeItem('page');
+        sessionStorage.removeItem('search');
+        sessionStorage.removeItem('type');
+        sessionStorage.removeItem('order');
     };
 
     const SkeletonCard: React.FC = () => (
@@ -132,22 +204,58 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                     placeholder="Search..."
                     value={search}
                     onChange={handleSearchChange}
-                    className={`border p-3 rounded-md ${theme === 'dark' ? 'bg-neutral-800 text-white' : 'bg-neutral-100 text-neutral-900'}`}
+                    className={`border p-3 rounded-md ${theme === 'dark' ? 'bg-neutral-800 text-white border-neutral-700' : 'bg-neutral-100 text-neutral-900 border-neutral-300'}`}
                 />
-                <select value={type} onChange={handleTypeChange} className={`border p-3 rounded-md ${theme === 'dark' ? 'bg-neutral-800 text-white' : 'bg-neutral-100 text-neutral-900'}`}>
-                    <option value="">All Category</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="fashion">Fashion</option>
-                    <option value="home">Home & Kitchen</option>
-                    <option value="sports">Sports</option>
-                    <option value="beauty">Beauty</option>
-                    <option value="books">Books</option>
-                </select>
-                {/* <select value={order} onChange={handleOrderChange} className={`border p-3 rounded-md ${theme === 'dark' ? 'bg-neutral-800 text-white' : 'bg-neutral-100 text-neutral-900'}`}>
-                    <option value="">Order by</option>
-                    <option value="priceAsc">Price Ascending</option>
-                    <option value="priceDesc">Price Descending</option>
-                </select> */}
+                <div className="relative" ref={dropdownRef}>
+                    <input
+                        type="text"
+                        placeholder="Select categories..."
+                        value={type.join(', ').replace(/^, /, '')}
+                        readOnly
+                        className={`border p-3 rounded-md cursor-pointer ${theme === 'dark' ? 'bg-neutral-800 text-white border-neutral-700' : 'bg-neutral-100 text-neutral-900 border-neutral-300'}`}
+                        onClick={() => setShowDropdown(!showDropdown)}
+                    />
+                    {showDropdown && (
+                        <div className={`absolute mt-1 w-full border rounded-md shadow-lg z-10 ${theme === 'dark' ? 'bg-neutral-800 text-white border-neutral-700' : 'bg-neutral-100 text-neutral-900 border-neutral-300'}`}>
+                            {categories.map((category: { name: string; icon: string }) => (
+                                <label key={category.name} className="block p-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        value={category.name}
+                                        checked={type.includes(category.name)}
+                                        onChange={handleCheckboxChange}
+                                        className="mr-2"
+                                    />
+                                    {category.name}
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div className="relative" ref={orderDropdownRef}>
+                    <div
+                        className={`border p-3 rounded-md cursor-pointer flex items-center ${theme === 'dark' ? 'bg-neutral-800 text-white border-neutral-700' : 'bg-neutral-100 text-neutral-900 border-neutral-300'}`}
+                        onClick={() => setShowOrderDropdown(!showOrderDropdown)}
+                    >
+                        <span>{order}</span>
+                        {order && (
+                            orderType === 'asc' ? <ArrowDownNarrowWide className="inline ml-2" /> : <ArrowUpNarrowWide className="inline ml-2" />
+                        )}
+                    </div>
+                    {showOrderDropdown && (
+                        <div className={`absolute mt-1 w-full border rounded-md shadow-lg z-10 ${theme === 'dark' ? 'bg-neutral-800 text-white border-neutral-700' : 'bg-neutral-100 text-neutral-900 border-neutral-300'}`}>
+                            {['Name', 'Rating', 'Price'].map(orderBy => (
+                                <div key={orderBy} className="flex justify-between items-center p-2 cursor-pointer" onClick={() => handleOrderClick(orderBy.toLowerCase())}>
+                                    {orderBy}
+                                    {order.toLowerCase() === orderBy.toLowerCase() && (
+                                        orderType === 'asc' ? <ArrowDownNarrowWide className="inline ml-2" /> : <ArrowUpNarrowWide className="inline ml-2" />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <button onClick={handleResetFilters} className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition">Remove All Filters</button>
                 <button onClick={handleAddProduct} className="p-3 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition">Add Product</button>
             </div>
             <InfiniteScroll
@@ -171,13 +279,13 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                                 />
                             </div>
                             <div className="p-6 flex flex-col flex-grow">
-                                <h3 className="text-xl font-semibold mb-2 text-neutral-800">{product.name}</h3>
+                                <h3 className={`text-xl font-semibold mb-2 text-neutral-800`}>{product.name}</h3>
                                 <div className="flex items-center mt-auto mb-2">
                                     <Star className="text-yellow-500 mr-2" size={20} />
-                                    <span className='text-neutral-800'>{product.rating} ({product.reviews_count} reviews)</span>
+                                    <span className={`text-neutral-800`}>{product.rating} ({product.reviews_count} reviews)</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span className="text-2xl font-bold text-neutral-800">${product.price}</span>
+                                    <span className={`text-2xl font-bold text-neutral-800`}>${product.price}</span>
                                     <button
                                         onClick={() => handleDeleteProduct(product.$id)}
                                         className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"

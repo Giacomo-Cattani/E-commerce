@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { database } from '../appwrite';
+import { ID } from 'appwrite';
 
 export const CreateProduct: React.FC = () => {
     const [name, setName] = useState('');
@@ -16,9 +17,9 @@ export const CreateProduct: React.FC = () => {
         e.preventDefault();
         try {
             const response = await database.createDocument(
-                '672ca0ab0036c24b4884',
-                '672ca0e2001acdc16b03',
-                'unique()',
+                import.meta.env.VITE_DB_ID,
+                import.meta.env.VITE_COL_PRODUCT,
+                ID.unique(),
                 {
                     name,
                     category,

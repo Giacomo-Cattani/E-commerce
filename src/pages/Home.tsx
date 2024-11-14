@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Heart, Star, Truck, Shield } from 'lucide-react';
+import { useAuth } from '../context';
 
 interface HomeProps {
     theme: string;
@@ -36,17 +37,12 @@ const featuredProducts = [
     }
 ];
 
-const categories = [
-    { name: 'Electronics', icon: '💻' },
-    { name: 'Fashion', icon: '👗' },
-    { name: 'Home & Kitchen', icon: '🏠' },
-    { name: 'Sports', icon: '⚽' },
-    { name: 'Beauty', icon: '💄' },
-    { name: 'Books', icon: '📚' }
-];
+
 
 export const Home: React.FC<HomeProps> = ({ theme }) => {
     const [cartItems, setCartItems] = useState(0);
+    const { categories } = useAuth();
+
 
     const addToCart = () => {
         setCartItems(cartItems + 1);
