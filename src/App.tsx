@@ -1,7 +1,8 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Home, Login, NotFound } from './pages';
 // import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
-import { Header, BigSpinner, PrivateRoute } from './components';
+import { Header, BigSpinner, PrivateRoute, HeaderAdmin } from './components';
+import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products, Reports } from './pages/admin'
 import { useState } from 'react';
 import { SignUp } from './pages/SignUp';
 import { AuthProvider } from './context';
@@ -63,9 +64,44 @@ const App = () => {
           path: '*',
           element: <NotFound theme={theme} />
         },
-      ]
+      ],
     },
-  ]);
+    {
+      path: '/admin',
+      element: <PrivateRoute><HeaderAdmin theme={theme} toggleTheme={toggleTheme} /></PrivateRoute>,
+      children: [
+        {
+          path: '/admin',
+          element: <Dashboard theme={theme} />
+        },
+        {
+          path: 'products',
+          element: <Products theme={theme} />
+        },
+        {
+          path: 'products/:id',
+          element: <ProductDetails theme={theme} />
+        },
+        {
+          path: 'orders',
+          element: <Orders theme={theme} />
+        },
+        {
+          path: 'customers',
+          element: <Customers theme={theme} />
+        },
+        {
+          path: 'inventory',
+          element: <Inventory theme={theme} />
+        },
+        {
+          path: 'reports',
+          element: <Reports theme={theme} />
+        }
+      ]
+    }
+  ]
+  );
 
   return (
     <AuthProvider>

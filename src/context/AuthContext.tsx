@@ -1,11 +1,14 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { account } from '../appwrite'
+import { account, teams } from '../appwrite';
+import { Models } from 'appwrite';
 
 interface AuthContextType {
     isLoggedIn: boolean;
     loading: boolean; // Add loading state
-    login: () => void;
+    login: (list: Models.TeamList<Models.Preferences>) => Promise<void>;
     logout: () => void;
+    admin: boolean;
+    categories: { name: string; icon: string }[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,11 +17,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
+    const [admin, setAdmin] = useState<boolean>(false);
+    const categories = [
+        { name: 'Electronics', icon: '💻' },
+        { name: 'Fashion', icon: '👗' },
+        { name: 'Home & Kitchen', icon: '🏠' },
+        { name: 'Sports', icon: '⚽' },
+        { name: 'Beauty', icon: '💄' },
+        { name: 'Books', icon: '📚' }
+    ];
 
     useEffect(() => {
         const checkSession = async () => {
             try {
                 await account.get();
+                const list = await teams.list();
+                try {
+                    if (list.teams[0]!.name === 'Admin') {
+                        setAdmin(true);
+                    }
+                } catch (error) {
+                    setAdmin(false);
+                }
                 setIsLoggedIn(true);
             } catch {
                 setIsLoggedIn(false);
@@ -29,8 +49,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         checkSession();
     }, []);
 
-    const login = async () => {
+    const login = async (list: Models.TeamList<Models.Preferences>) => {
 
+        try {
+            if (list.teams[0]!.name === 'Admin') {
+                setAdmin(true);
+            }
+        } catch (error) {
+            setAdmin(false);
+        }
         setLoading(true); // Set loading to true after logout
         try {
             setIsLoggedIn(true);
@@ -46,6 +73,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setLoading(true); // Set loading to true after logout
         try {
             await account.deleteSession('current');
+            setAdmin(false);
             setIsLoggedIn(false);
         } catch (error) {
             console.error('Logout failed', error);
@@ -55,7 +83,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout, admin, categories }}>
             {children}
         </AuthContext.Provider>
     );

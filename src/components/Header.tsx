@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
-import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout } from '@tabler/icons-react';
+import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout, IconShield } from '@tabler/icons-react';
 import { useAuth } from '../context';
 import { CartPopUp } from './CartPopUp';
 
@@ -13,7 +13,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(false);
-    const { isLoggedIn, logout } = useAuth();
+    const { isLoggedIn, logout, admin } = useAuth();
     const [showCart, setShowCart] = useState(false);
 
     return (
@@ -45,6 +45,16 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                                 </div>
                             </div>
                         </li>
+                        {admin && (
+                            <li style={{ marginLeft: '10px' }}>
+                                <div onClick={() => navigate('/admin')} className="mr-2 cursor-pointer flex flex-col items-center relative group">
+                                    <IconShield stroke={1.2} color={`${theme === 'dark' ? 'white' : 'black'}`} />
+                                    <div className="absolute bottom-0 translate-y-full bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Admin
+                                    </div>
+                                </div>
+                            </li>
+                        )}
                         <li style={{ marginLeft: '10px' }}>
                             <div
                                 onMouseEnter={() => setHovered(true)}
@@ -54,7 +64,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                                         navigate('/login');
                                     } else {
                                         logout();
-                                        console.log('Logged out');
                                         navigate('/login');
                                     }
                                 }} className="mr-2 cursor-pointer flex flex-col items-center relative group">
