@@ -64,7 +64,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                                         navigate('/login');
                                     } else {
                                         logout();
-                                        console.log('Logged out');
                                         navigate('/login');
                                     }
                                 }} className="mr-2 cursor-pointer flex flex-col items-center relative group">

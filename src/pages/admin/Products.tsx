@@ -5,6 +5,9 @@ import { database } from '../../appwrite';
 import { Query } from 'appwrite';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { CreateProduct } from '../../components/CreateProduct';
 
 interface Product {
     name: string;
@@ -49,9 +52,12 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [showOrderDropdown, setShowOrderDropdown] = useState(false);
     const [orderType, setOrderType] = useState<'asc' | 'desc'>('asc');
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState<string | null>(null);
     const navigate = useNavigate();
     const dropdownRef = useRef<HTMLDivElement>(null);
     const orderDropdownRef = useRef<HTMLDivElement>(null);
+    const popupRef = useRef<HTMLDivElement>(null);
     const { categories } = useAuth();
 
     useEffect(() => {
@@ -95,8 +101,24 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
         };
     }, []);
 
+    const handleClickOutsidePopup = (event: MouseEvent) => {
+        if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+            handleClosePopup();
+        }
+    };
+
+    useEffect(() => {
+        if (isPopupOpen) {
+            document.addEventListener('mousedown', handleClickOutsidePopup);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutsidePopup);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsidePopup);
+        };
+    }, [isPopupOpen]);
+
     const fetchProducts = async () => {
-        console.log(search)
         const products = await database.listDocuments(
             import.meta.env.VITE_DB_ID,
             import.meta.env.VITE_COL_PRODUCT,
@@ -111,8 +133,6 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                 orderType === 'asc' ? Query.orderAsc(order.toLowerCase()) : Query.orderDesc(order.toLowerCase())
             ]
         );
-        console.log(order)
-        console.log(products.documents)
         if (products.documents.length === 0) {
             setHasMore(false);
         } else {
@@ -159,11 +179,35 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
     };
 
     const handleAddProduct = () => {
-        // Add product logic here
+        setIsPopupOpen(true);
+    };
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
     };
 
     const handleDeleteProduct = (id: string) => {
-        // Delete product logic here
+        setProductToDelete(id);
+    };
+
+    const confirmDeleteProduct = async () => {
+        if (!productToDelete) return;
+
+        try {
+            const deleteProduct = await database.deleteDocument(
+                import.meta.env.VITE_DB_ID,
+                import.meta.env.VITE_COL_PRODUCT,
+                productToDelete
+            );
+            if (deleteProduct) {
+                setProducts(prevProducts => prevProducts.filter(product => product.$id !== productToDelete));
+                toast.success('Product deleted successfully');
+            }
+        } catch (error) {
+            toast.error('Error deleting product');
+        } finally {
+            setProductToDelete(null);
+        }
     };
 
     const handleResetFilters = () => {
@@ -179,6 +223,10 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
         sessionStorage.removeItem('type');
         sessionStorage.removeItem('order');
     };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    }
 
     const SkeletonCard: React.FC = () => (
         <div className="bg-white rounded-xl overflow-hidden shadow-lg flex flex-col animate-pulse">
@@ -196,7 +244,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
     );
 
     return (
-        <div className={`${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen p-6`}>
+        <div className={`${theme === 'dark' ? 'text-white' : 'text-neutral-900'} bg-gradient-to-r ${theme === 'dark' ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} min-h-screen p-6`}>
             <h1 className="text-3xl font-bold mb-6">Product Management</h1>
             <div className="mb-8 flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
                 <input
@@ -287,7 +335,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                                 <div className="flex justify-between items-center">
                                     <span className={`text-2xl font-bold text-neutral-800`}>${product.price}</span>
                                     <button
-                                        onClick={() => handleDeleteProduct(product.$id)}
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteProduct(product.$id); }}
                                         className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
                                     >
                                         Delete
@@ -305,6 +353,29 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                     )}
                 </div>
             </InfiniteScroll>
+            {isPopupOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                    <div ref={popupRef} className="relative rounded-lg shadow-md w-96 mx-auto">
+                        <button onClick={handleClosePopup} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                            &times;
+                        </button>
+                        <CreateProduct closePopup={closePopup} />
+                    </div>
+                </div>
+            )}
+            {productToDelete && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                    <div className="bg-white p-6 rounded-lg shadow-md text-neutral-800">
+                        <h2 className="text-xl mb-4">Confirm Delete</h2>
+                        <p>Are you sure you want to delete this product?</p>
+                        <div className="mt-4 flex justify-end space-x-2">
+                            <button onClick={() => setProductToDelete(null)} className="px-4 py-2 bg-gray-900 rounded-md text-white">Cancel</button>
+                            <button onClick={confirmDeleteProduct} className="px-4 py-2 bg-red-500 text-white rounded-md">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            <ToastContainer />
         </div>
     );
 };

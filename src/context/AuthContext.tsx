@@ -35,11 +35,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 try {
                     if (list.teams[0]!.name === 'Admin') {
                         setAdmin(true);
-                        console.log('Admin');
                     }
                 } catch (error) {
                     setAdmin(false);
-                    console.log('Not Admin');
                 }
                 setIsLoggedIn(true);
             } catch {
@@ -56,11 +54,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             if (list.teams[0]!.name === 'Admin') {
                 setAdmin(true);
-                console.log('Admin');
             }
         } catch (error) {
             setAdmin(false);
-            console.log('Not Admin');
         }
         setLoading(true); // Set loading to true after logout
         try {

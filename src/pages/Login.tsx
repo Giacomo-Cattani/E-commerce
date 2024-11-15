@@ -27,7 +27,6 @@ export const Login: React.FC<LoginProps> = ({ theme }) => {
 
         loginAccount(email, password).then((res: string | (Models.Session | Models.TeamList<Models.Preferences>)[]) => {
             if (typeof res[0] !== 'object') {
-                console.log(res);
                 toast.error(String(res));
             } else {
                 login(res[1] as Models.TeamList<Models.Preferences>);
