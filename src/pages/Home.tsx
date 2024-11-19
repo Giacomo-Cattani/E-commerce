@@ -176,7 +176,7 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                             placeholder="Enter your email address"
                             className="flex-grow px-6 py-3 rounded-l-full text-neutral-900 focus:outline-none"
                         />
-                        <button onClick={() => { alert("GAYY") }}
+                        <button
                             className="px-8 py-3 bg-neutral-900 text-white rounded-r-full hover:bg-neutral-800 transition"
                         >
                             Subscribe
