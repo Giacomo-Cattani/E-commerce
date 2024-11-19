@@ -1,18 +1,19 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import { SalesMetrics, OrderManagement, InventoryManagement } from '../../components';
 
 interface DashboardProps {
     theme: string;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ theme }) => {
+    const isDarkTheme = theme === 'dark';
+
     return (
-        <div className="pt-32">
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <div className="mt-4">
-                <span className="text-lg font-semibold">Key Metrics</span>
-                {/* Add key metrics here */}
-            </div>
+        <div className={`${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen`}>
+            <SalesMetrics theme={theme} />
+            <OrderManagement theme={theme} />
+            <InventoryManagement theme={theme} />
             <Outlet />
         </div>
     );
