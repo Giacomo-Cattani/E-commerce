@@ -7,10 +7,9 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ theme }) => {
-    const isDarkTheme = theme === 'dark';
 
     return (
-        <div className={`${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen`}>
+        <div className={`bg-gradient-to-r ${theme === 'dark' ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} min-h-screen`}>
             <SalesMetrics theme={theme} />
             <OrderManagement theme={theme} />
             <InventoryManagement theme={theme} />

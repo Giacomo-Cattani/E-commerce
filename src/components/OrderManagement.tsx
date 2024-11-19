@@ -14,7 +14,7 @@ export const OrderManagement: React.FC<OrderManagementProps> = ({ theme }) => {
     const isDarkTheme = theme === 'dark';
 
     return (
-        <section className={`py-16 px-6 ${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'}`}>
+        <section className={`py-16 px-6 `}>
             <div className="container mx-auto">
                 <h2 className="text-3xl font-bold text-center mb-12">Order Management</h2>
                 <div className="overflow-x-auto">

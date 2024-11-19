@@ -244,8 +244,8 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
     );
 
     return (
-        <div className={`${theme === 'dark' ? 'text-white' : 'text-neutral-900'} bg-gradient-to-r ${theme === 'dark' ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} min-h-screen p-6`}>
-            <h1 className="text-3xl font-bold mb-6">Product Management</h1>
+        <div className={`${theme === 'dark' ? 'text-white' : 'text-neutral-900'} py-20 bg-gradient-to-r ${theme === 'dark' ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} min-h-screen p-6`}>
+
             <div className="mb-8 flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
                 <input
                     type="text"
