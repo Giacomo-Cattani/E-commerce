@@ -7,8 +7,10 @@ interface AuthContextType {
     loading: boolean; // Add loading state
     login: (list: Models.TeamList<Models.Preferences>) => Promise<void>;
     logout: () => void;
+    updateEmail: (newEmail: string, password: string) => Promise<void>;
     admin: boolean;
     categories: { name: string; icon: string }[];
+    user: Models.User<Models.Preferences>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         { name: 'Beauty', icon: '💄' },
         { name: 'Books', icon: '📚' }
     ];
+    const [user, setUser] = useState<Models.User<Models.Preferences>>({} as Models.User<Models.Preferences>);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -52,6 +55,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const login = async (list: Models.TeamList<Models.Preferences>) => {
 
         try {
+            setUser(await account.get());
             if (list.teams[0]!.name === 'Admin') {
                 setAdmin(true);
             }
@@ -82,8 +86,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
+    const updateEmail = async (newEmail: string, password: string) => {
+        await account.updateEmail(newEmail, password);
+        setUser(await account.get());
+    };
+
     return (
-        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout, admin, categories }}>
+        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout, admin, categories, user, updateEmail }}>
             {children}
         </AuthContext.Provider>
     );

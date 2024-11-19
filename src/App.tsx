@@ -1,8 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home, Login, NotFound } from './pages';
-// import { Home, Products, ProductDetails, Cart, Checkout, About, Contact } from './pages';
+import { Home, Login, NotFound, About, Products as MainProducts, ProductDetails as MainProductDetails, Contact, Profile } from './pages';
 import { Header, BigSpinner, PrivateRoute, HeaderAdmin } from './components';
-import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products, Reports } from './pages/admin'
+import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products } from './pages/admin'
 import { useState } from 'react';
 import { SignUp } from './pages/SignUp';
 import { AuthProvider } from './context';
@@ -34,15 +33,15 @@ const App = () => {
         },
         {
           path: '/about',
-          element: <div>Ciao</div>
+          element: <About theme={theme} />
         },
         {
           path: '/products',
-          element: <div>Ciao</div>
+          element: <MainProducts theme={theme} />
         },
         {
           path: '/product/:id',
-          element: <div>Ciao</div>
+          element: <MainProductDetails theme={theme} />
         },
         {
           path: '/cart',
@@ -50,11 +49,11 @@ const App = () => {
         },
         {
           path: '/contact',
-          element: <div>Ciao</div>
+          element: <Contact theme={theme} />
         },
         {
           path: '/profile',
-          element: <PrivateRoute><div>Ciao</div></PrivateRoute>
+          element: <PrivateRoute><Profile theme={theme} /></PrivateRoute>
         },
         {
           path: '/checkout',
@@ -94,10 +93,6 @@ const App = () => {
           path: 'inventory',
           element: <Inventory theme={theme} />
         },
-        {
-          path: 'reports',
-          element: <Reports theme={theme} />
-        }
       ]
     }
   ]

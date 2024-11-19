@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { Sun, Moon, Home, Grid, Box, ShoppingCart, Users, Clipboard, BarChart } from 'lucide-react';
+import { Sun, Moon, Home, Grid, Box, ShoppingCart, Users, Clipboard } from 'lucide-react';
 
 interface HeaderAdminProps {
     theme: string;
@@ -42,11 +42,6 @@ export const HeaderAdmin: React.FC<HeaderAdminProps> = ({ theme, toggleTheme }) 
                         <li >
                             <div onClick={() => navigate('/admin/inventory')} className="flex items-center cursor-pointer hover:text-gray-400">
                                 <Clipboard className="inline-block mr-2" size={20} /> <span className="hidden sm:inline">Inventory</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div onClick={() => navigate('/admin/reports')} className="flex items-center cursor-pointer hover:text-gray-400">
-                                <BarChart className="inline-block mr-2" size={20} /> <span className="hidden sm:inline">Reports</span>
                             </div>
                         </li>
                     </ul>
