@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Heart, Star, Truck, Shield } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useAuth } from '../context';
+import { HeroSection, BenefitsSection, NewsletterSection } from '../components';
 
 interface HomeProps {
     theme: string;
@@ -37,12 +38,9 @@ const featuredProducts = [
     }
 ];
 
-
-
 export const Home: React.FC<HomeProps> = ({ theme }) => {
     const [cartItems, setCartItems] = useState(0);
     const { categories } = useAuth();
-
 
     const addToCart = () => {
         setCartItems(cartItems + 1);
@@ -52,60 +50,8 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
 
     return (
         <div className={`${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen`}>
-            {/* Hero Section */}
-            <section className={`relative bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} pt-32 pb-20 px-6`}>
-                <div className="container mx-auto grid md:grid-cols-2 items-center gap-12">
-                    <div>
-                        <h1 className="text-5xl font-bold mb-6 ">
-                            Discover Amazing Products
-                        </h1>
-                        <p className="text-xl mb-8">
-                            Find the latest trends, unbeatable deals, and high-quality products across multiple categories.
-                        </p>
-                        <div className="flex space-x-4">
-                            <button
-                                className="px-8 py-3 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition transform hover:scale-105"
-                            >
-                                Shop Now
-                            </button>
-                            <button
-                                className="px-8 py-3 border-2 border-yellow-500 text-yellow-600 rounded-full hover:bg-yellow-100 transition transform hover:scale-105"
-                            >
-                                View Categories
-                            </button>
-                        </div>
-                    </div>
-                    <div className="hidden md:block">
-                        <img
-                            src="https://placehold.co/600x400"
-                            alt="Shopping Illustration"
-                            className="w-full rounded-xl shadow-2xl"
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* Benefits Section */}
-            <section className={`py-16 px-6 ${isDarkTheme ? 'bg-neutral-800' : 'bg-neutral-50'}`}>
-                <div className="container mx-auto grid md:grid-cols-3 gap-8 text-center">
-                    <div className={`bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}>
-                        <Truck className="mx-auto mb-4 text-yellow-500" size={48} />
-                        <h3 className="text-xl font-semibold mb-2 text-neutral-800">Free Shipping</h3>
-                        <p className="text-neutral-400">Free shipping on orders over $100</p>
-                    </div>
-                    <div className={`bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}>
-                        <Shield className="mx-auto mb-4 text-yellow-500" size={48} />
-                        <h3 className={`text-xl font-semibold mb-2 text-neutral-800`}>Secure Payment</h3>
-                        <p className="text-neutral-400">100% secure payment methods</p>
-                    </div>
-                    <div className={`bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}>
-                        <Heart className="mx-auto mb-4 text-yellow-500" size={48} />
-                        <h3 className="text-xl font-semibold mb-2 text-neutral-800">24/7 Support</h3>
-                        <p className="text-neutral-400">Dedicated customer support</p>
-                    </div>
-                </div>
-            </section>
-
+            <HeroSection theme={theme} />
+            <BenefitsSection theme={theme} />
             {/* Product Categories */}
             <section className="py-16 px-6">
                 <div className="container mx-auto">
@@ -123,7 +69,6 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                     </div>
                 </div>
             </section>
-
             {/* Featured Products */}
             <section className={`py-16 px-6 ${isDarkTheme ? 'bg-neutral-800' : 'bg-neutral-50'}`}>
                 <div className="container mx-auto">
@@ -162,28 +107,7 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                     </div>
                 </div>
             </section>
-
-            {/* Newsletter */}
-            <section className={`py-16 px-6 bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-500 to-yellow-600'} text-white`}>
-                <div className="container mx-auto text-center max-w-2xl">
-                    <h2 className="text-4xl font-bold mb-6">Subscribe to Our Newsletter</h2>
-                    <p className="text-xl mb-8">
-                        Get exclusive deals, product updates, and 10% off your first order!
-                    </p>
-                    <div className="flex max-w-xl mx-auto">
-                        <input
-                            type="email"
-                            placeholder="Enter your email address"
-                            className="flex-grow px-6 py-3 rounded-l-full text-neutral-900 focus:outline-none"
-                        />
-                        <button onClick={() => { alert("GAYY") }}
-                            className="px-8 py-3 bg-neutral-900 text-white rounded-r-full hover:bg-neutral-800 transition"
-                        >
-                            Subscribe
-                        </button>
-                    </div>
-                </div>
-            </section>
+            <NewsletterSection theme={theme} />
         </div>
     );
 };
