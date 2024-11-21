@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Eye, EyeClosed } from 'lucide-react';
+import { IconEye, IconEyeClosed } from '@tabler/icons-react';
 import { loginAccount } from '../appwrite';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -51,7 +51,7 @@ export const Login: React.FC<LoginProps> = ({ theme }) => {
                         <div className="relative">
                             <input autoComplete='current-password' required type={visibility ? 'text' : 'password'} id="password" className="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-neutral-800" />
                             <button type="button" onClick={() => setVisibility(!visibility)} className="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-800">
-                                {visibility ? <EyeClosed size={20} /> : <Eye size={20} />}
+                                {visibility ? <IconEyeClosed size={20} /> : <IconEye size={20} />}
                             </button>
                         </div>
                     </div>

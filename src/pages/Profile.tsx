@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context';
 import { ToastContainer, toast } from 'react-toastify';
-import { Pencil } from 'lucide-react';
+import { IconPencil } from '@tabler/icons-react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '../utils/cropImage'; // Assume you have a utility function to crop the image
 import { account } from '../appwrite';
@@ -14,13 +14,13 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [showCropper, setShowCropper] = useState(false);
     const [imageSrc, setImageSrc] = useState('');
-    const [loadingImage, setLoadingImage] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedArea, setCroppedArea] = useState<CropArea | null>(null);
 
     useEffect(() => {
-        const fetchProfileImage = async () => {
+        const fetchProfileData = async () => {
             try {
                 const prefs = await account.getPrefs();
                 if (prefs.avatar) {
@@ -31,12 +31,12 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
                     await account.updatePrefs({ avatar: defaultImage });
                 }
             } catch (error) {
-                console.error('Failed to fetch profile image:', error);
+                console.error('Failed to fetch profile data:', error);
             } finally {
-                setLoadingImage(false);
+                setLoading(false);
             }
         };
-        fetchProfileImage();
+        fetchProfileData();
     }, []);
 
     const handleEmailChange = async () => {
@@ -94,6 +94,14 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-gray-300 animate-pulse"></div>
+            </div>
+        );
+    }
+
     return (
         <div className={`${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen`}>
             <section className="py-24 px-6">
@@ -103,16 +111,20 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
                         <h2 className="text-2xl text-center font-semibold mb-4">Welcome, {user.name}</h2>
                         <div className="flex justify-center mb-4">
                             <div className="relative">
-                                {loadingImage ? (
-                                    <div className="w-32 h-32 rounded-full bg-gray-300 animate-pulse mb-4"></div>
-                                ) : (
-                                    <img src={imageSrc} alt="Profile" className="items-centers w-32 h-32 rounded-full mb-4" />
-                                )}
+                                <img src={imageSrc} alt="Profile" className="items-centers w-32 h-32 rounded-full mb-4" />
                                 <input
                                     type="file"
                                     accept="image/jpeg,image/png"
                                     onChange={handleImageUpload}
                                     className="hidden"
+                                    id="profile-image-upload"
+                                />
+                                <label htmlFor="profile-image-upload" className="absolute top-0 left-0 px-2 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition cursor-pointer">
+                                    <IconPencil />
+                                </label>
+                            </div>
+                        </div>
+                        <div className="flex items-center mb-4">
                             <p className="font-bold mr-2 text-lg">Email:</p>
                             <span>{user.email}</span>
                             <div className="ml-auto">
