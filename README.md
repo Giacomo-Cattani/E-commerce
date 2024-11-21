@@ -1,50 +1,45 @@
-# React + TypeScript + Vite
+# Nex Gen Market
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is the front-end part of an E-commerce application built with React, TypeScript, and Vite. It provides a seamless shopping experience for users with modern web technologies.
 
-Currently, two official plugins are available:
+## Table of Contents
+- Features
+- Technologies
+- Installation
+- Usage
+- License
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+- User authentication and authorization
+- Product browsing and searching
+- Shopping cart management
+- Order processing
+- User profile management
+- Responsive design for mobile and desktop
 
-## Expanding the ESLint configuration
+## Technologies
+- React.js
+- TypeScript
+- Vite
+- Tailwind CSS
+- Appwrite
+- React Router
+- Context API
+- React Toastify
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
+To get a local copy up and running, follow these steps:
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone the repository: `git clone <repository-url>`
+2. Navigate to the project directory: `cd nex-gen-market`
+3. Install dependencies: `npm install`
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Usage
+To start the development server, run: `npm run dev`
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+To build the project for production, run: `npm run build`
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+To preview the production build, run: `npm run preview`
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## License
+This project is licensed under the MIT License.
