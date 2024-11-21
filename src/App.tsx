@@ -2,16 +2,32 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Home, Login, NotFound, About, Products as MainProducts, ProductDetails as MainProductDetails, Contact, Profile } from './pages';
 import { Header, BigSpinner, PrivateRoute, HeaderAdmin } from './components';
 import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products } from './pages/admin'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SignUp } from './pages/SignUp';
 import { AuthProvider } from './context';
+import { account } from './appwrite';
 
 const App = () => {
 
   const [theme, setTheme] = useState('dark');
 
-  const toggleTheme = () => {
+  useEffect(() => {
+    const fetchTheme = async () => {
+      try {
+        const prefs = await account.getPrefs();
+        if (prefs.theme) {
+          setTheme(prefs.theme);
+        }
+      } catch (error) {
+        console.error('Failed to fetch theme:', error);
+      }
+    };
+    fetchTheme();
+  }, []);
+
+  const toggleTheme = async () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+    await account.updatePrefs({ theme: theme === 'dark' ? 'light' : 'dark' });
   };
 
   const router = createBrowserRouter([

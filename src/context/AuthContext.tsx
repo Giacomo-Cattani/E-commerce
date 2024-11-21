@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         const checkSession = async () => {
             try {
-                await account.get();
+                const user = await account.get();
                 const list = await teams.list();
                 try {
                     if (list.teams[0]!.name === 'Admin') {
@@ -42,6 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 } catch (error) {
                     setAdmin(false);
                 }
+                setUser(user);
                 setIsLoggedIn(true);
             } catch {
                 setIsLoggedIn(false);
