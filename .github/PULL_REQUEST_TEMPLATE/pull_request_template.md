@@ -5,8 +5,18 @@
 Please provide a summary of the changes in this PR:
 - What does this PR do?
 - Why is it necessary?
+- Include any relevant context or background information.
 
 Fixes: [issue link or number, if applicable]
+
+---
+
+## Related PRs
+
+List any related PRs against other branches or repositories:
+
+- [Related PR #1](link)
+- [Related PR #2](link)
 
 ---
 
@@ -49,6 +59,16 @@ Please ensure the following are complete before submitting the PR:
 ## Screenshots (if applicable)
 
 Add screenshots to demonstrate your changes (e.g., UI updates, before/after comparisons).
+
+---
+
+## Deployment Notes
+
+Include any deployment notes or instructions:
+
+- [ ] Any special configurations
+- [ ] Environment variables
+- [ ] Other deployment steps
 
 ---
 
