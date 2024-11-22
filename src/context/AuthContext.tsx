@@ -11,10 +11,12 @@ interface AuthContextType {
     admin: boolean;
     categories: { name: string; icon: string }[];
     user: Models.User<Models.Preferences>;
+    fetchProfileData: () => void;
+    imageSrc: string;
+    updateImg: (value: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -29,6 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         { name: 'Books', icon: '📚' }
     ];
     const [user, setUser] = useState<Models.User<Models.Preferences>>({} as Models.User<Models.Preferences>);
+    const [imageSrc, setImageSrc] = useState('');
 
     useEffect(() => {
         const checkSession = async () => {
@@ -54,7 +57,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     const login = async (list: Models.TeamList<Models.Preferences>) => {
-
         try {
             setUser(await account.get());
             if (list.teams[0]!.name === 'Admin') {
@@ -74,7 +76,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const logout = async () => {
-
         setLoading(true); // Set loading to true after logout
         try {
             await account.deleteSession('current');
@@ -92,8 +93,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(await account.get());
     };
 
+    const fetchProfileData = async () => {
+        try {
+            const prefs = await account.getPrefs();
+            if (prefs.avatar) {
+                setImageSrc(prefs.avatar);
+            } else {
+                const defaultImage = 'https://api.dicebear.com/9.x/identicon/svg?seed=' + user.email + '&scale=70&backgroundColor=ffdfbf';
+                setImageSrc(defaultImage);
+                prefs.avatar = defaultImage;
+                await account.updatePrefs({ ...prefs });
+            }
+        } catch (error) {
+            console.error('Failed to fetch profile data:', error);
+        }
+    };
+
+    const updateImg = (value: string) => {
+        setImageSrc(value);
+    }
+
     return (
-        <AuthContext.Provider value={{ isLoggedIn, loading, login, logout, admin, categories, user, updateEmail }}>
+        <AuthContext.Provider value={{ fetchProfileData, imageSrc, updateImg, isLoggedIn, loading, login, logout, admin, categories, user, updateEmail }}>
             {children}
         </AuthContext.Provider>
     );

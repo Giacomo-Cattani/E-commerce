@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const SkeletonLoader = () => {
+export const SkeletonLoader = () => {
     const [layout, setLayout] = useState(1);
 
     const getRandomWidth = () => {
@@ -172,4 +172,3 @@ const SkeletonLoader = () => {
         </div>
     );
 };
-export default SkeletonLoader;

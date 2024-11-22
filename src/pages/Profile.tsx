@@ -7,35 +7,17 @@ import getCroppedImg from '../utils/cropImage'; // Assume you have a utility fun
 import { account } from '../appwrite';
 
 export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
-    const { user, updateEmail } = useAuth();
+    const { user, updateEmail, imageSrc, updateImg, fetchProfileData } = useAuth();
     const isDarkTheme = theme === 'dark';
     const [newEmail, setNewEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [showCropper, setShowCropper] = useState(false);
-    const [imageSrc, setImageSrc] = useState('');
-    const [loading, setLoading] = useState(true);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedArea, setCroppedArea] = useState<CropArea | null>(null);
 
     useEffect(() => {
-        const fetchProfileData = async () => {
-            try {
-                const prefs = await account.getPrefs();
-                if (prefs.avatar) {
-                    setImageSrc(prefs.avatar);
-                } else {
-                    const defaultImage = 'https://api.dicebear.com/9.x/identicon/svg?seed=' + user.email + '&scale=70&backgroundColor=ffdfbf';
-                    setImageSrc(defaultImage);
-                    await account.updatePrefs({ avatar: defaultImage });
-                }
-            } catch (error) {
-                console.error('Failed to fetch profile data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchProfileData();
     }, []);
 
@@ -72,7 +54,7 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
         if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImageSrc(reader.result as string);
+                updateImg(reader.result as string);
                 setShowCropper(true);
             };
             reader.readAsDataURL(file);
@@ -84,23 +66,12 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
     const handleCropSave = async () => {
         if (croppedArea) {
             const croppedImage = await getCroppedImg(imageSrc, croppedArea);
-            // Save the cropped image to the user's profile
-            console.log(croppedImage); // Example usage of croppedImage
             await account.updatePrefs({ avatar: croppedImage });
-            // ...code to save the cropped image...
             setShowCropper(false);
         } else {
             toast.error('Failed to crop the image.');
         }
     };
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full bg-gray-300 animate-pulse"></div>
-            </div>
-        );
-    }
 
     return (
         <div className={`${isDarkTheme ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900'} min-h-screen`}>
