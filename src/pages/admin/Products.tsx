@@ -28,27 +28,21 @@ interface Product {
 }
 
 export const Products: React.FC<{ theme: string }> = ({ theme }) => {
-    const [products, setProducts] = useState<Product[]>(() => {
-        const savedProducts = sessionStorage.getItem('products');
-        return savedProducts ? JSON.parse(savedProducts) : [];
-    });
     const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(() => {
-        const savedPage = sessionStorage.getItem('page');
-        return savedPage ? JSON.parse(savedPage) : 0;
-    });
-    const [search, setSearch] = useState(() => {
-        const savedSearch = sessionStorage.getItem('search');
-        return savedSearch ? JSON.parse(savedSearch) : '';
-    });
-    const [type, setType] = useState<string[]>(() => {
-        const savedType = sessionStorage.getItem('type');
-        return savedType ? JSON.parse(savedType) : [];
-    });
-    const [order, setOrder] = useState(() => {
-        const savedOrder = sessionStorage.getItem('order');
-        return savedOrder ? JSON.parse(savedOrder) : 'Name';
-    });
+    const [products, setProducts] = useState<Product[]>([]);
+    const [page, setPage] = useState(0);
+    const [search, setSearch] = useState('');
+    const [type, setType] = useState<string[]>(
+        () => {
+            const params = new URLSearchParams(location.search);
+            const category = params.get('category');
+            if (category) {
+                return [category];
+            }
+            return [];
+        }
+    );
+    const [order, setOrder] = useState('Name');
     const [showDropdown, setShowDropdown] = useState(false);
     const [showOrderDropdown, setShowOrderDropdown] = useState(false);
     const [orderType, setOrderType] = useState<'asc' | 'desc'>('asc');
@@ -64,26 +58,6 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
         setHasMore(true);
         fetchProducts();
     }, [page, search, type, orderType, order]);
-
-    useEffect(() => {
-        sessionStorage.setItem('products', JSON.stringify(products));
-    }, [products]);
-
-    useEffect(() => {
-        sessionStorage.setItem('page', JSON.stringify(page));
-    }, [page]);
-
-    useEffect(() => {
-        sessionStorage.setItem('search', JSON.stringify(search));
-    }, [search]);
-
-    useEffect(() => {
-        sessionStorage.setItem('type', JSON.stringify(type));
-    }, [type]);
-
-    useEffect(() => {
-        sessionStorage.setItem('order', JSON.stringify(order));
-    }, [order]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

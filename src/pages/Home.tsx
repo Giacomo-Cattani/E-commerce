@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { IconStar } from '@tabler/icons-react';
 import { useAuth } from '../context';
 import { HeroSection, BenefitsSection, NewsletterSection } from '../components';
+import { useNavigate } from 'react-router-dom';
 
 interface HomeProps {
     theme: string;
@@ -41,6 +42,7 @@ const featuredProducts = [
 export const Home: React.FC<HomeProps> = ({ theme }) => {
     const [cartItems, setCartItems] = useState(0);
     const { categories } = useAuth();
+    const navigate = useNavigate();
 
     const addToCart = () => {
         setCartItems(cartItems + 1);
@@ -53,12 +55,16 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
             <HeroSection theme={theme} />
             <BenefitsSection theme={theme} />
             {/* Product Categories */}
-            <section className="py-16 px-6">
+            <section className="py-16 px-6" id='categories-section'>
                 <div className="container mx-auto">
                     <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-6">
                         {categories.map((category, index) => (
                             <div
+                                onClick={() => {
+                                    navigate(`/products?category=${category.name}`);
+                                    window.scrollTo(0, 0);
+                                }}
                                 key={index}
                                 className={`bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg hover:scale-105 transition cursor-pointer ${isDarkTheme ? 'bg-neutral-700 text-white' : ''}`}
                             >
