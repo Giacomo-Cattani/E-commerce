@@ -1,17 +1,43 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Home, Login, NotFound, About, Products as MainProducts, ProductDetails as MainProductDetails, Contact, Profile } from './pages';
-import { Header, BigSpinner, PrivateRoute, HeaderAdmin } from './components';
+import { Header, PrivateRoute, HeaderAdmin, SkeletonLoader } from './components';
 import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products } from './pages/admin'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SignUp } from './pages/SignUp';
-import { AuthProvider } from './context';
+import { AuthProvider, useAuth } from './context';
+import { account } from './appwrite';
 
 const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+};
 
+const AppContent = () => {
   const [theme, setTheme] = useState('dark');
+  const { loading } = useAuth();
 
-  const toggleTheme = () => {
+  useEffect(() => {
+    const fetchTheme = async () => {
+      try {
+        const prefs = await account.getPrefs();
+        if (prefs.theme) {
+          setTheme(prefs.theme);
+        }
+      } catch (error) {
+        console.error('Failed to fetch theme:', error);
+      }
+    };
+    fetchTheme();
+  }, []);
+
+  const toggleTheme = async () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+    const prefs = await account.getPrefs();
+    prefs.theme = theme === 'dark' ? 'light' : 'dark';
+    await account.updatePrefs({ ...prefs });
   };
 
   const router = createBrowserRouter([
@@ -99,11 +125,11 @@ const App = () => {
   );
 
   return (
-    <AuthProvider>
-      <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
-        <RouterProvider router={router} fallbackElement={<BigSpinner />} />
-      </div>
-    </AuthProvider>
+    <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
+      {loading ? <SkeletonLoader /> : null}
+      <RouterProvider router={router} fallbackElement={<SkeletonLoader />} />
+
+    </div>
   );
 };
 

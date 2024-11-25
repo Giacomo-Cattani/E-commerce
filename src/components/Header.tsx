@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
+import { IconMoon, IconSun } from '@tabler/icons-react';
 import { IconUserCircle, IconShoppingCart, IconLogin, IconLogout, IconShield } from '@tabler/icons-react';
 import { useAuth } from '../context';
 import { CartPopUp } from './CartPopUp';
@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                         </li>
                         <li>
                             <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700">
-                                {theme === 'dark' ? <Sun className="text-yellow-500" size={20} /> : <Moon className="text-neutral-500" size={20} />}
+                                {theme === 'dark' ? <IconSun className="text-yellow-500" size={20} /> : <IconMoon className="text-neutral-500" size={20} />}
                             </button>
                         </li>
                     </ul>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Star, ArrowDownNarrowWide, ArrowUpNarrowWide } from 'lucide-react';
+import { IconStar, IconSortDescending, IconSortAscending } from '@tabler/icons-react';
 import { database } from '../../appwrite';
 import { Query } from 'appwrite';
 import { useNavigate } from 'react-router-dom';
@@ -287,7 +287,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                     >
                         <span>{order}</span>
                         {order && (
-                            orderType === 'asc' ? <ArrowDownNarrowWide className="inline ml-2" /> : <ArrowUpNarrowWide className="inline ml-2" />
+                            orderType === 'asc' ? <IconSortDescending className="inline ml-2" /> : <IconSortAscending className="inline ml-2" />
                         )}
                     </div>
                     {showOrderDropdown && (
@@ -296,7 +296,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                                 <div key={orderBy} className="flex justify-between items-center p-2 cursor-pointer" onClick={() => handleOrderClick(orderBy.toLowerCase())}>
                                     {orderBy}
                                     {order.toLowerCase() === orderBy.toLowerCase() && (
-                                        orderType === 'asc' ? <ArrowDownNarrowWide className="inline ml-2" /> : <ArrowUpNarrowWide className="inline ml-2" />
+                                        orderType === 'asc' ? <IconSortDescending className="inline ml-2" /> : <IconSortAscending className="inline ml-2" />
                                     )}
                                 </div>
                             ))}
@@ -329,7 +329,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                             <div className="p-6 flex flex-col flex-grow">
                                 <h3 className={`text-xl font-semibold mb-2 text-neutral-800`}>{product.name}</h3>
                                 <div className="flex items-center mt-auto mb-2">
-                                    <Star className="text-yellow-500 mr-2" size={20} />
+                                    <IconStar className="text-yellow-500 mr-2" size={20} />
                                     <span className={`text-neutral-800`}>{product.rating} ({product.reviews_count} reviews)</span>
                                 </div>
                                 <div className="flex justify-between items-center">

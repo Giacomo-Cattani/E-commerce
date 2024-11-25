@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star } from 'lucide-react';
+import { IconStar } from '@tabler/icons-react';
 import { useAuth } from '../context';
 import { HeroSection, BenefitsSection, NewsletterSection } from '../components';
 
@@ -89,14 +89,14 @@ export const Home: React.FC<HomeProps> = ({ theme }) => {
                                 <div className="p-6 flex flex-col flex-grow">
                                     <h3 className="text-xl font-semibold mb-2 text-neutral-800">{product.name}</h3>
                                     <div className="flex items-center mt-auto mb-2">
-                                        <Star className="text-yellow-500 mr-2" size={20} />
+                                        <IconStar className="text-yellow-500 mr-2" size={20} />
                                         <span className='text-neutral-800' >{product.rating} ({product.reviews} reviews)</span>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-2xl font-bold text-neutral-800">${product.price}</span>
                                         <button
                                             onClick={addToCart}
-                                            className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
+                                            className="md:text-xs lg:text-base px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
                                         >
                                             Add to Cart
                                         </button>
