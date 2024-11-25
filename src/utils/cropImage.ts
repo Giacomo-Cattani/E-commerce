@@ -7,7 +7,7 @@ const createImage = (url: string): Promise<HTMLImageElement> =>
         image.src = url;
     });
 
-const getCroppedImg = async (imageSrc: string, pixelCrop: { x: number; y: number; width: number; height: number }, format: 'image/jpeg' | 'image/png' = 'image/jpeg'): Promise<string> => {
+const getCroppedImg = async (imageSrc: string, pixelCrop: { x: number; y: number; width: number; height: number }, format:string): Promise<string> => {
     const image = await createImage(imageSrc);
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -30,6 +30,8 @@ const getCroppedImg = async (imageSrc: string, pixelCrop: { x: number; y: number
         pixelCrop.width,
         pixelCrop.height
     );
+
+     
 
     return new Promise((resolve) => {
         const base64Image = canvas.toDataURL(format);

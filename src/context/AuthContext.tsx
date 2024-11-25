@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { account, teams } from '../appwrite';
+import { account, storage, teams } from '../appwrite';
 import { Models } from 'appwrite';
 
 interface AuthContextType {
@@ -94,18 +94,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const fetchProfileData = async () => {
+        setLoading(true); // Set loading to true after fetch
         try {
             const prefs = await account.getPrefs();
+
             if (prefs.avatar) {
-                setImageSrc(prefs.avatar);
+                const imageResponse = await fetch(
+                    storage.getFileView(
+                        import.meta.env.VITE_STORAGE_IMG,
+                        prefs.avatar
+                    )
+                );
+                if (imageResponse.status === 200) {
+                    const image = await imageResponse.blob();
+                    setImageSrc(URL.createObjectURL(image));
+                } else {
+                    setImageSrc(prefs.avatar);
+                }
             } else {
                 const defaultImage = 'https://api.dicebear.com/9.x/identicon/svg?seed=' + user.email + '&scale=70&backgroundColor=ffdfbf';
                 setImageSrc(defaultImage);
                 prefs.avatar = defaultImage;
+                // Remove empty keys from prefs
+                Object.keys(prefs).forEach(key => {
+                    if (key === "" && prefs[key] === "") {
+                        delete prefs[key];
+                    }
+                });
                 await account.updatePrefs({ ...prefs });
             }
         } catch (error) {
             console.error('Failed to fetch profile data:', error);
+        } finally {
+            setLoading(false); // Set loading to false after fetch
         }
     };
 

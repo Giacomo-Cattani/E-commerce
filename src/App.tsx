@@ -126,11 +126,9 @@ const AppContent = () => {
 
   return (
     <div className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-950'}`}>
-      {
-        loading ?
-          <SkeletonLoader /> :
-          <RouterProvider router={router} fallbackElement={<SkeletonLoader />} />
-      }
+      {loading ? <SkeletonLoader /> : null}
+      <RouterProvider router={router} fallbackElement={<SkeletonLoader />} />
+
     </div>
   );
 };

@@ -4,7 +4,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import { IconPencil } from '@tabler/icons-react';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '../utils/cropImage'; // Assume you have a utility function to crop the image
-import { account } from '../appwrite';
+import { account, storage } from '../appwrite';
+import { ID, Permission, Role } from 'appwrite';
 
 export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
     const { user, updateEmail, imageSrc, updateImg, fetchProfileData } = useAuth();
@@ -20,6 +21,7 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
     useEffect(() => {
         fetchProfileData();
     }, []);
+
 
     const handleEmailChange = async () => {
 
@@ -63,10 +65,52 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
         }
     };
 
+    const extractFormat = (dataUrl: string) => {
+        const dataIndex = dataUrl.indexOf(';');
+        return dataUrl.substring(5, dataIndex);
+    };
+
     const handleCropSave = async () => {
         if (croppedArea) {
-            const croppedImage = await getCroppedImg(imageSrc, croppedArea);
-            await account.updatePrefs({ avatar: croppedImage });
+            const format = extractFormat(imageSrc);
+            const croppedImage = await getCroppedImg(imageSrc, croppedArea, format);
+            const blob = await fetch(croppedImage).then(res => res.blob());
+            const file = new File([blob], `avatar ${user.$id}`, { type: blob.type });
+
+            const prefs = await account.getPrefs();
+
+            try {
+                if (await storage.getFile(import.meta.env.VITE_STORAGE_IMG, prefs.avatar)) {
+                    await storage.deleteFile(
+                        import.meta.env.VITE_STORAGE_IMG,
+                        prefs.avatar
+                    );
+                }
+            } catch (error) {
+                console.error('Error fetching file:', error);
+            }
+
+
+            const result = await storage.createFile(
+                import.meta.env.VITE_STORAGE_IMG,
+                ID.unique(),
+                file,
+                [
+                    // Permission.read(Role.users()),
+                    // Permission.read(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)),
+                    // Permission.read(Role.user(user.$id)),
+                    // Permission.update(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)),
+                    // Permission.delete(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)),
+                    // Permission.update(Role.user(user.$id)),
+                    // Permission.delete(Role.user(user.$id))
+                    Permission.read(Role.users()),   // All users can read
+                    Permission.delete(Role.user(user.$id)), // Creator can delete
+                    Permission.delete(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)), // Admin team can delete
+                ]
+            );
+            prefs.avatar = `${result.$id}`;
+
+            await account.updatePrefs({ ...prefs });
             setShowCropper(false);
         } else {
             toast.error('Failed to crop the image.');

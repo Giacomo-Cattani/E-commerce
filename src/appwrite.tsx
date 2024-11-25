@@ -1,4 +1,4 @@
-import { Client, Account, Databases, ID, Teams } from 'appwrite';
+import { Client, Account, Databases, ID, Teams, Storage } from 'appwrite';
 
 const client = new Client();
 client
@@ -8,6 +8,7 @@ client
 export const account = new Account(client);
 export const database = new Databases(client);
 export const teams = new Teams(client);
+export const storage = new Storage(client);
 
 export const createAccount = async (email: string, password: string, name: string) => {
     try {
