@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home, Login, NotFound, About, Products as MainProducts, ProductDetails as MainProductDetails, Contact, Profile } from './pages';
+import { Home, Login, NotFound, About, Products as MainProducts, ProductDetails as MainProductDetails, Contact, Profile, Catalog } from './pages';
 import { Header, PrivateRoute, HeaderAdmin, SkeletonLoader } from './components';
 import { Customers, Dashboard, Inventory, Orders, ProductDetails, Products } from './pages/admin'
 import { useEffect, useState } from 'react';
@@ -66,7 +66,7 @@ const AppContent = () => {
           element: <MainProducts theme={theme} />
         },
         {
-          path: '/product/:id',
+          path: '/products/:id',
           element: <MainProductDetails theme={theme} />
         },
         {
@@ -84,6 +84,10 @@ const AppContent = () => {
         {
           path: '/checkout',
           element: <div>Ciao</div>
+        },
+        {
+          path: '/catalog',
+          element: <Catalog theme={theme} />
         },
         {
           path: '*',
@@ -121,6 +125,7 @@ const AppContent = () => {
         },
       ]
     }
+
   ]
   );
 

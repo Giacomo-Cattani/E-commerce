@@ -7,3 +7,4 @@ export * from "./Contact";
 export * from "./Products";
 export * from "./ProductDetails";
 export * from './Profile';
+export * from './Catalog';

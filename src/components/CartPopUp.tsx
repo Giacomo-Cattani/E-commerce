@@ -26,7 +26,7 @@ export const CartPopUp: React.FC<CartPopUpProps> = ({ items, onClose }) => {
 
     return (
         <div className="relative">
-            <div ref={popupRef} className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg p-4 w-64">
+            <div ref={popupRef} className="fixed z-50  right-0 mt-20 mr-4 bg-white rounded-lg shadow-lg p-4 w-64">
                 <div className="flex justify-between items-center mb-2">
                     <h2 className="text-lg font-bold">Cart</h2>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700">

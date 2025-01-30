@@ -8,7 +8,7 @@ import { account, storage } from '../appwrite';
 import { ID, Permission, Role } from 'appwrite';
 
 export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
-    const { user, updateEmail, imageSrc, updateImg, fetchProfileData } = useAuth();
+    const { user, updateEmail, imageSrc, updateImg, fetchProfileData, setLoading } = useAuth();
     const isDarkTheme = theme === 'dark';
     const [newEmail, setNewEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,7 +19,17 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
     const [croppedArea, setCroppedArea] = useState<CropArea | null>(null);
 
     useEffect(() => {
-        fetchProfileData();
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                await fetchProfileData();
+            } catch (error) {
+                console.error('Failed to fetch profile data:', error);
+            } finally {
+                setLoading(false); // Set loading to false after fetch
+            }
+        };
+        fetchData();
     }, []);
 
 
@@ -96,13 +106,6 @@ export const Profile: React.FC<{ theme: string }> = ({ theme }) => {
                 ID.unique(),
                 file,
                 [
-                    // Permission.read(Role.users()),
-                    // Permission.read(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)),
-                    // Permission.read(Role.user(user.$id)),
-                    // Permission.update(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)),
-                    // Permission.delete(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)),
-                    // Permission.update(Role.user(user.$id)),
-                    // Permission.delete(Role.user(user.$id))
                     Permission.read(Role.users()),   // All users can read
                     Permission.delete(Role.user(user.$id)), // Creator can delete
                     Permission.delete(Role.team(import.meta.env.VITE_ADMIN_TEAM_ID)), // Admin team can delete

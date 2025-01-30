@@ -14,6 +14,7 @@ interface AuthContextType {
     fetchProfileData: () => void;
     imageSrc: string;
     updateImg: (value: string) => void;
+    setLoading: (value: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -94,7 +95,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const fetchProfileData = async () => {
-        setLoading(true); // Set loading to true after fetch
         try {
             const prefs = await account.getPrefs();
 
@@ -125,8 +125,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
         } catch (error) {
             console.error('Failed to fetch profile data:', error);
-        } finally {
-            setLoading(false); // Set loading to false after fetch
         }
     };
 
@@ -135,7 +133,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     return (
-        <AuthContext.Provider value={{ fetchProfileData, imageSrc, updateImg, isLoggedIn, loading, login, logout, admin, categories, user, updateEmail }}>
+        <AuthContext.Provider value={{ fetchProfileData, imageSrc, updateImg, isLoggedIn, loading, login, logout, admin, categories, user, updateEmail, setLoading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -11,7 +11,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
     const navigate = useNavigate();
 
     return (
-        <section className={`relative bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} pt-32 pb-20 px-6`}>
+        <section className={`relative bg-gradient-to-r ${isDarkTheme ? 'from-gray-800 to-gray-700' : 'from-yellow-50 to-yellow-100'} pt-32 pb-20 px-6 justify-center`}>
             <div className="container mx-auto grid md:grid-cols-2 items-center gap-12">
                 <div>
                     <h1 className="text-5xl font-bold mb-6 ">
@@ -28,12 +28,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
                             Shop Now
                         </button>
                         <button
-                        onClick={() => {
-                            const categoriesSection = document.getElementById('categories-section');
-                            if (categoriesSection) {
-                                categoriesSection.scrollIntoView({ behavior: 'smooth' });
-                            }
-                        }}
+                            onClick={() => {
+                                const categoriesSection = document.getElementById('categories-section');
+                                if (categoriesSection) {
+                                    categoriesSection.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
                             className={`px-8 py-3 border-2 border-yellow-500 text-yellow-600 rounded-full hover:${isDarkTheme ? 'bg-gray-800' : 'bg-yellow-50'} transition transform hover:scale-105`}
                         >
                             View Categories
@@ -44,10 +44,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ theme }) => {
                     <img
                         src="https://placehold.co/600x400"
                         alt="Shopping Illustration"
-                        className="w-full rounded-xl shadow-2xl"
+                        className=" rounded-xl shadow-2xl w-full"
                     />
                 </div>
             </div>
-        </section>
+        </section >
     );
 };

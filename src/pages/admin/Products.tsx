@@ -31,6 +31,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
     const [hasMore, setHasMore] = useState(true);
     const [products, setProducts] = useState<Product[]>([]);
     const [page, setPage] = useState(0);
+    const [cartItems, setCartItems] = useState(0);
     const [search, setSearch] = useState('');
     const [type, setType] = useState<string[]>(
         () => {
@@ -52,7 +53,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const orderDropdownRef = useRef<HTMLDivElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
-    const { categories } = useAuth();
+    const { categories, admin } = useAuth();
 
     useEffect(() => {
         setHasMore(true);
@@ -162,6 +163,11 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
 
     const handleDeleteProduct = (id: string) => {
         setProductToDelete(id);
+    };
+
+    const addToCart = (id: string) => {
+        id;
+        setCartItems(cartItems + 1);
     };
 
     const confirmDeleteProduct = async () => {
@@ -278,7 +284,7 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                     )}
                 </div>
                 <button onClick={handleResetFilters} className="p-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition">Remove All Filters</button>
-                <button onClick={handleAddProduct} className="p-3 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition">Add Product</button>
+                {<button onClick={handleAddProduct} className="p-3 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition">Add Product</button>}
             </div>
             <InfiniteScroll
                 dataLength={products.length}
@@ -308,12 +314,21 @@ export const Products: React.FC<{ theme: string }> = ({ theme }) => {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className={`text-2xl font-bold text-neutral-800`}>${product.price}</span>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); handleDeleteProduct(product.$id); }}
-                                        className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
-                                    >
-                                        Delete
-                                    </button>
+                                    {admin ?
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleDeleteProduct(product.$id); }}
+                                            className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
+                                        >
+                                            Delete
+                                        </button>
+                                        :
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); addToCart(product.$id); }}
+                                            className="px-4 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
+                                        >
+                                            Add to Cart
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         </div>
