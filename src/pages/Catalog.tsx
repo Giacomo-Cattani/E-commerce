@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import getTrip from '../services/api/trip.js';
 
 export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
   const [month, setMonth] = useState('');
@@ -10,8 +11,14 @@ export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
     console.log('Month:', month);
     console.log('People:', people);
     console.log('Nights:', nights);
-    //API CALL
-    
+
+    try {
+      getTrip({ month, people: Number(people), nights: Number(nights) }).then(
+        (response: any) => {
+          console.log(response);
+        }
+      );
+    } catch (error) {}
   };
 
   return (
@@ -41,18 +48,18 @@ export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
                 <option value='' disabled>
                   Select a month
                 </option>
-                <option value='January'>January</option>
-                <option value='February'>February</option>
-                <option value='March'>March</option>
-                <option value='April'>April</option>
-                <option value='May'>May</option>
-                <option value='June'>June</option>
-                <option value='July'>July</option>
-                <option value='August'>August</option>
-                <option value='September'>September</option>
-                <option value='October'>October</option>
-                <option value='November'>November</option>
-                <option value='December'>December</option>
+                <option value='GENNAIO'>January</option>
+                <option value='FEBBRAIO'>February</option>
+                <option value='MARZO'>March</option>
+                <option value='APRILE'>April</option>
+                <option value='MAGGIO'>May</option>
+                <option value='GIUGNO'>June</option>
+                <option value='LUGLIO'>July</option>
+                <option value='AGOSTO'>August</option>
+                <option value='SETTEMBRE'>September</option>
+                <option value='OTTOBRE'>October</option>
+                <option value='NOVEMBRE'>November</option>
+                <option value='DICEMBRE'>December</option>
               </select>
 
               <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2'>
