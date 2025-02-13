@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { IconMoon, IconSun, IconFlame } from '@tabler/icons-react';
 import {
   IconUserCircle,
-  IconShoppingCart,
+  // IconShoppingCart,
   IconLogin,
   IconLogout,
   IconShield,
@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   const location = useLocation();
   const [hovered, setHovered] = useState(false);
   const { isLoggedIn, logout, admin } = useAuth();
-  const [showCart, setShowCart] = useState(false);
+  // const [showCart, setShowCart] = useState(false);
   const [currentPage, setCurrentPage] = useState('');
 
   useEffect(() => {
