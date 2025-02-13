@@ -1,23 +1,44 @@
 import React, { useState } from 'react';
 import getTrip from '../services/api/trip.js';
+import { IconCalendarMonth, IconCurrentLocation } from '@tabler/icons-react';
 
 export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
   const [month, setMonth] = useState('');
   const [people, setPeople] = useState('');
   const [nights, setNights] = useState('');
 
-  const searchTravel = () => {
-    console.log('Search started');
-    console.log('Month:', month);
-    console.log('People:', people);
-    console.log('Nights:', nights);
+  const [tripNotFound, setTripNotFound] = useState(false);
 
+  const [trips, setTrips] = useState<
+    {
+      _id: string;
+      name: string;
+      destination: string;
+      startDate: string;
+      endDate: string;
+      price: number;
+      discount: number;
+      discountedPrice: number | null;
+    }[]
+  >([]);
+
+  const searchTravel = async () => {
     try {
-      getTrip({ month, people: Number(people), nights: Number(nights) }).then(
-        (response: any) => {
-          console.log(response);
-        }
-      );
+      setTrips([]);
+      const haveTrips = await getTrip({
+        month,
+        people: Number(people),
+        nights: Number(nights),
+      });
+
+      console.log(haveTrips);
+      if (haveTrips.length < 1) {
+        console.log('No trips found');
+        setTripNotFound(true);
+        return;
+      }
+      setTripNotFound(false);
+      setTrips(haveTrips);
     } catch (error) {}
   };
 
@@ -86,6 +107,7 @@ export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
               type='number'
               placeholder='How many people?'
               value={people}
+              min={1}
               onChange={(e) => setPeople(e.target.value)}
               className={`w-full rounded-lg border p-3 text-sm transition-all focus:ring-2 ${
                 theme === 'dark'
@@ -101,6 +123,7 @@ export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
               type='number'
               placeholder='How many nights?'
               value={nights}
+              min={1}
               onChange={(e) => setNights(e.target.value)}
               className={`w-full rounded-lg border p-3 text-sm transition-all focus:ring-2 ${
                 theme === 'dark'
@@ -121,31 +144,120 @@ export const Catalog: React.FC<{ theme: string }> = ({ theme }) => {
             Search
           </button>
         </div>
+        {tripNotFound && (
+          <div
+            className={`mt-4 rounded-lg p-4 text-sm transition-all duration-300 ${
+              theme === 'dark'
+                ? 'bg-red-800 text-red-200'
+                : 'bg-red-200 text-red-800'
+            }`}
+          >
+            No trips found. Please adjust your search criteria and try again.
+          </div>
+        )}
       </div>
-      <div className='mt-28 text-center'>
-        <div
-          className={`mx-auto mb-4 h-24 w-24 rounded-full ${
-            theme === 'dark' ? 'bg-gray-700' : 'bg-yellow-100'
-          } flex items-center justify-center`}
-        >
-          {/* Replace with your own icon/illustration */}
-          <span className='text-4xl'>🌍</span>
+      {trips.length < 1 ? (
+        <>
+          <div className='mt-28 select-none text-center'>
+            <div
+              className={`mx-auto mb-4 h-24 w-24 rounded-full ${
+                theme === 'dark' ? 'bg-gray-700' : 'bg-yellow-100'
+              } flex items-center justify-center`}
+            >
+              {/* Replace with your own icon/illustration */}
+              <span className='text-4xl'>🌍</span>
+            </div>
+            <h3
+              className={`text-xl font-medium ${
+                theme === 'dark' ? 'text-yellow-500' : 'text-neutral-900'
+              }`}
+            >
+              Where will you wander?
+            </h3>
+            <p
+              className={`mt-2 ${
+                theme === 'dark' ? 'text-gray-400' : 'text-neutral-600'
+              }`}
+            >
+              Search for trips by month, travelers, and nights.
+            </p>
+          </div>
+        </>
+      ) : (
+        <div className='mx-auto mt-12 grid max-w-7xl grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3'>
+          {trips.map((trip, index) => (
+            <div
+              key={index}
+              className='group mx-auto h-full w-full max-w-sm overflow-hidden rounded-xl bg-neutral-900 shadow-lg transition-all duration-300 hover:shadow-xl md:max-w-none'
+            >
+              {/* Image Section */}
+              <div className='relative aspect-[4/3] w-full overflow-hidden'>
+                <img
+                  src={`https://picsum.photos/seed/${trip._id}/800/600`}
+                  alt={trip.name}
+                  className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                />
+                <div className='absolute inset-0 bg-gradient-to-t from-neutral-900/60 to-transparent' />
+              </div>
+
+              {/* Content Section */}
+              <div className='flex flex-1 flex-col p-4 md:p-5'>
+                <h2 className='mb-2 text-lg font-bold text-white md:text-xl'>
+                  {trip.name}
+                </h2>
+
+                {/* Trip Details */}
+                <div className='mb-3 flex flex-col gap-2 text-sm text-neutral-300'>
+                  <div className='flex items-center gap-2'>
+                    <IconCalendarMonth className='h-4 w-4 shrink-0 text-yellow-500' />
+                    <span>
+                      {Math.ceil(
+                        (new Date(trip.endDate).getTime() -
+                          new Date(trip.startDate).getTime()) /
+                          (1000 * 60 * 60 * 24)
+                      )}{' '}
+                      days ({new Date(trip.startDate).toLocaleDateString()} -{' '}
+                      {new Date(trip.endDate).toLocaleDateString()})
+                    </span>
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <IconCurrentLocation className='h-4 w-4 shrink-0 text-yellow-500' />
+                    <span className='truncate'>{trip.destination}</span>
+                  </div>
+                </div>
+
+                {/* Price & CTA */}
+                <div className='mt-auto flex items-center justify-between'>
+                  <div className='flex flex-col'>
+                    <span className='text-xs text-neutral-400 md:text-sm'>
+                      From
+                    </span>
+                    <div>
+                      {trip.discountedPrice !== null ? (
+                        <>
+                          <span className='text-xl font-bold text-neutral-400 line-through md:text-2xl'>
+                            ${trip.price}
+                          </span>
+                          <span className='ml-2 text-xl font-bold text-yellow-500 md:text-2xl'>
+                            ${trip.discountedPrice}
+                          </span>
+                        </>
+                      ) : (
+                        <span className='text-xl font-bold text-yellow-500 md:text-2xl'>
+                          ${trip.price}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button className='rounded-lg bg-yellow-500 px-4 py-2 text-sm font-medium text-neutral-900 transition-colors hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-neutral-900 md:px-5 md:py-2.5 md:text-base'>
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <h3
-          className={`text-xl font-medium ${
-            theme === 'dark' ? 'text-yellow-500' : 'text-neutral-900'
-          }`}
-        >
-          Where will you wander?
-        </h3>
-        <p
-          className={`mt-2 ${
-            theme === 'dark' ? 'text-gray-400' : 'text-neutral-600'
-          }`}
-        >
-          Search for trips by month, travelers, and nights.
-        </p>
-      </div>
+      )}
     </div>
   );
 };
